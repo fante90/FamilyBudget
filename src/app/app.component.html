@@ -1,0 +1,32 @@
+<ion-app>
+  <ion-menu side="start" contentId="mainContent">
+    <ion-header mode="ios">
+      <ion-toolbar color="primary" mode="ios">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon slot="start" name="reorder"></ion-icon>
+          <ion-label>
+            Movimenti
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="add"></ion-icon>
+          <ion-label>
+            Registra movimento
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="stats"></ion-icon>
+          <ion-label>
+            Statistiche
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="mainContent" main></ion-router-outlet>
+</ion-app>

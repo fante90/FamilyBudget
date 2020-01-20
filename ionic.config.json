@@ -1,0 +1,7 @@
+{
+  "name": "familyBudget",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

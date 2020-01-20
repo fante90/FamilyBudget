@@ -1,0 +1,58 @@
+<ion-content>
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button mode="ios" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <div class="ion-padding-horizontal dashboard-top-card dark-bg">
+    <ion-card color="primary ion-no-margin">
+      <ion-card-header class="ion-text-center">
+        <ion-card-subtitle><strong>BILANCIO ANNUALE</strong></ion-card-subtitle>
+        <ion-card-title><strong>+ 10.000 &euro;</strong></ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  <ion-list lines="full" mode="ios">
+    <ion-list-header mode="ios" color="light">
+      <ion-label>
+        ULTIMI MOVIMENTI
+      </ion-label>
+      <ion-icon
+        class="ion-float-right ion-padding-horizontal"
+        color="dark"
+        size="large"
+        name="options"
+      ></ion-icon>
+    </ion-list-header>
+    <ion-item
+      class="moviment"
+      mode="ios"
+      *ngFor="let moviment of moviments; let i = index"
+    >
+      <div slot="start" class="icon {{ moviment.getColor() }}-borders">
+        <ion-icon
+          color="{{ moviment.getColor() }}"
+          name="{{ moviment.getIcon() }}"
+        ></ion-icon>
+      </div>
+      <ion-label>
+        <h4>{{ moviment.getDate() }}</h4>
+        <p>{{ moviment.getNote() }}</p>
+      </ion-label>
+      <div slot="end">
+        <ion-label>
+          <p>
+            <strong class="ion-text-right">
+              {{ moviment.getValue() }} &euro;
+            </strong>
+          </p>
+        </ion-label>
+      </div>
+    </ion-item>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newOperation()" color="tertiary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
