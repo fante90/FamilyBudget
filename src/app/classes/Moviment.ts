@@ -1,36 +1,32 @@
-// Classe che rappresenta un movimento in entrata o in uscita
+import { MovimentCategory } from './MovimentCategory';
+
+// Classe che rappresenta un movimento in entrata, in uscita o un investimento
 export class Moviment {
-    private color: string;
-    private icon: string;
+    private category: MovimentCategory;
     private date: Date;
     private note: string;
     private value: number;
 
-    constructor(color: string, icon: string, date: Date, note: string, value: number) {
-        this.color = color;
-        this.icon = icon;
+    constructor(category: MovimentCategory, date: Date, note: string, value: number) {
+        this.category = category;
         this.date = date;
         this.note = note;
         this.value = value;
     }
 
-    public getColor() {
-        return this.color;
+    public getCategory(): MovimentCategory {
+        return this.category;
     }
 
-    public getIcon() {
-        return this.icon;
-    }
-
-    public getDate() {
+    public getDate(): string {
         return this.date.getDate() + '/' + (this.date.getMonth() + 1) + '/' + this.date.getFullYear();
     }
 
-    public getNote() {
+    public getNote(): string {
         return this.note;
     }
 
-    public getValue() {
+    public getValue(): string {
         const value = Math.round(this.value * 100) / 100;
         return value.toFixed(2);
     }

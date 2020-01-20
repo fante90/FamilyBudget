@@ -3,6 +3,7 @@ import { Moviment } from '../../classes/Moviment';
 import { UIService } from '../../services/ui.service';
 import { ModalController } from '@ionic/angular';
 import { AddMovimentModalPage } from '../modals/add-moviment-modal/add-moviment-modal.page';
+import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,19 +25,19 @@ export class DashboardPage implements OnInit {
         text: 'Registra entrata',
         icon: 'arrow-round-down',
         handler: () => {
-          this.presentModal(AddMovimentModalPage, {});
+          this.presentModal(AddMovimentModalPage, { mvType: 'P' });
         }
       }, {
         text: 'Registra uscita',
         icon: 'arrow-round-up',
         handler: () => {
-          console.log('Registra uscita clicked');
+          this.presentModal(AddMovimentModalPage, { mvType: 'M' });
         }
       }, {
         text: 'Registra investimento',
         icon: 'cash',
         handler: () => {
-          console.log('Registra investimento clicked');
+          this.presentModal(AddMovimentModalPage, { mvType: 'I' });
         }
       }
     ]);
@@ -58,13 +59,13 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
     // Simulazione di movimenti da caricare da db
     this.moviments = [
-      new Moviment('primary', 'basket', new Date(), 'Spesa al Mercatò', -20.19),
-      new Moviment('secondary', 'pizza', new Date(), 'Cena', -35.00),
-      new Moviment('dark', 'flash', new Date(), 'Bolletta luce', -105.00),
-      new Moviment('dark', 'thermometer', new Date(), 'Bolletta gas', -65.00),
-      new Moviment('primary', 'basket', new Date(), 'Spesa Macelleria', -45.00),
-      new Moviment('tertiary', 'shirt', new Date(), 'Felpa', -45.00),
-      new Moviment('dark', 'globe', new Date(), 'Connessione internet', -57.00),
+      new Moviment(new MovimentCategory(6, 'Spesa', 'M', 'primary', 'basket'), new Date(), 'Spesa al Mercatò', -20.19),
+      new Moviment(new MovimentCategory(4, 'Cene', 'M', 'secondary', 'pizza'), new Date(), 'Cena in pizzeria', -35.00),
+      new Moviment(new MovimentCategory(2, 'Bollette Luce', 'M', 'dark', 'flash'), new Date(), '', -105.00),
+      new Moviment(new MovimentCategory(1, 'Bollette Gas', 'M', 'dark', 'thermometer'), new Date(), '', -65.00),
+      new Moviment(new MovimentCategory(6, 'Spesa', 'M', 'primary', 'basket'), new Date(), 'Spesa Macelleria', -45.00),
+      new Moviment(new MovimentCategory(5, 'Shopping', 'M', 'tertiary', 'shirt'), new Date(), 'Felpa', -45.00),
+      new Moviment(new MovimentCategory(3, 'Bollette Telefoniche', 'M', 'dark', 'globe'), new Date(), '', -57.00),
     ];
   }
 }

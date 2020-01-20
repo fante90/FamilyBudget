@@ -29,14 +29,15 @@
       mode="ios"
       *ngFor="let moviment of moviments; let i = index"
     >
-      <div slot="start" class="icon {{ moviment.getColor() }}-borders">
+      <div slot="start" class="icon {{ moviment.getCategory().getColor() }}-borders">
         <ion-icon
-          color="{{ moviment.getColor() }}"
-          name="{{ moviment.getIcon() }}"
+          color="{{ moviment.getCategory().getColor() }}"
+          name="{{ moviment.getCategory().getIcon() }}"
         ></ion-icon>
       </div>
       <ion-label>
         <h4>{{ moviment.getDate() }}</h4>
+        <small class="ion-text-uppercase">{{ moviment.getCategory().getDescription() }}</small>
         <p>{{ moviment.getNote() }}</p>
       </ion-label>
       <div slot="end">
