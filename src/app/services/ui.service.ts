@@ -1,28 +1,60 @@
 import { Injectable } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
-
+import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
 export class UIService {
 
-  constructor(private actionSheetCtrl: ActionSheetController) { }
+  constructor(
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private modalCtrl: ModalController
+  ) { }
 
   /**
    * Metodo per visualizzare un action sheet
-   * @param title Titolo dell'action sheet
-   * @param buttons Comandi da mostrare nell'action sheet, il pulsante "Annulla" viene aggiunto automaticamente
+   * @param actionSheetParams Configurazione dell'action sheet
    */
-  public async presentActionSheet(title: string, buttons: Array<object>) {
-    buttons.push({
+  public async presentActionSheet(actionSheetParams) {
+    const closeBtn = {
       text: 'Annulla',
       icon: 'close',
       role: 'cancel'
-    });
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: title,
-      buttons: buttons
-    });
+    };
+    (actionSheetParams.buttons) ? actionSheetParams.buttons.push(closeBtn) : actionSheetParams.buttons = [closeBtn];
+    const actionSheet = await this.actionSheetCtrl.create(actionSheetParams);
     await actionSheet.present();
+  }
+
+  /**
+   * Metodo per visualizzare un Alert
+   * @param alertCnf Configurazione dell'alert
+   */
+  public async presentAlert(alertParams: object) {
+    const alert = await this.alertCtrl.create(alertParams);
+    await alert.present();
+  }
+
+  /**
+   * Metodo per visualizzare un TOast
+   * @param toastParams Configurazione del toast
+   */
+  public async presentToast(toastParams: object) {
+    const toast = await this.toastCtrl.create(toastParams);
+    await toast.present();
+  }
+
+  /**
+   * Metodo per aprire una pagina in modale
+   * @param modalPage nome della classe della pagina da aprire
+   * @param modalParams oggetto contenente i parametri da passare alla pagina aperta in modale
+   */
+  public async presentModal(modalPage: any, modalParams: { [key: string]: any; }) {
+    const modal = await this.modalCtrl.create({
+      component: modalPage,
+      componentProps: modalParams
+    });
+    await modal.present();
   }
 }

@@ -1,0 +1,19 @@
+<ion-content>
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button mode="ios" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list lines="full" mode="ios">
+    <ion-list-header mode="ios" color="light">
+      <ion-label>
+        CATEGORIE
+      </ion-label>
+    </ion-list-header>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newCategory()" color="tertiary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

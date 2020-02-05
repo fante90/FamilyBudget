@@ -8,11 +8,21 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
+import { AddMovimentModalPageModule } from './pages/modals/add-moviment-modal/add-moviment-modal.module';
+import { AddCategoryModalPageModule } from './pages/modals/add-category-modal/add-category-modal.module';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  imports: [
+    BrowserModule, IonicModule.forRoot(), AppRoutingModule,
+    // Per ottenere tutte le funzionalità necessarie per i form template-driven
+    FormsModule,
+    // Per aprire le modali tramite un service devo includere i moduli delle pagine modali qui
+    AddMovimentModalPageModule,
+    AddCategoryModalPageModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,

@@ -1,0 +1,53 @@
+<ion-header mode="ios">
+  <ion-toolbar color="secondary" mode="ios">
+    <div>
+      <ion-title>CREA CATEGORIA</ion-title>
+    </div>
+    <ion-button mode="ios" fill="clear" slot="end" (click)="dismissModal()">
+      <ion-icon color="dark" name="close"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <form (ngSubmit)="onSubmit()" #formCtrl="ngForm">
+    <ion-item>
+      <ion-label position="floating">ID</ion-label>
+      <ion-input disabled type="number" [(ngModel)]="model.ID" name="ID"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Descrizione <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required type="text" [(ngModel)]="model.description" name="description"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Associa a <ion-text color="danger">*</ion-text></ion-label>
+      <ion-select required [(ngModel)]="model.type" name="type">
+        <ion-select-option 
+          *ngFor="let movType of movimentsTypes; let i = index" 
+          value="{{ movType.code }}"
+        >
+          {{ movType.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Colore <ion-text color="danger">*</ion-text></ion-label>
+      <ion-select required [(ngModel)]="model.color" name="color">
+        <ion-select-option 
+          *ngFor="let color of colors; let i = index" 
+          value="{{ color.code }}"
+        >
+          {{ color.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Icona <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="text" [(ngModel)]="model.icon" name="icon"></ion-input>
+    </ion-item>
+    <div class="ion-padding">
+      <ion-button color="tertiary" expand="block" type="submit" [disabled]="!formCtrl.form.valid || submitted" class="ion-no-margin">
+        Salva
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

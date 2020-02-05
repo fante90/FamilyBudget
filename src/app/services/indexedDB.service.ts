@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class IndexedDBService {
 
     constructor() { }
+
     /**
      * Metodo per aprire un database, restituisce una Promise
      * Se la promise viene risolta restituisce un oggetto con il riferimento al db e se necessario inzializzare / aggiornare il db
@@ -30,10 +31,11 @@ export class IndexedDBService {
                 });
             };
             // apertura db ok ma richiede creazione/aggiornamento
-            request.onupgradeneeded = () => {
+            request.onupgradeneeded = (e) => {
                 resolve({
                     db: request.result,
-                    updateNeeded: true
+                    updateNeeded: true,
+                    oldVersion: e.oldVersion
                 });
             };
             // errore in apertura
@@ -48,7 +50,52 @@ export class IndexedDBService {
                 reject({
                     code: -1,
                     message: 'Db già in uso su altre tab del browser'
-                })
+                });
+            };
+        });
+
+        return promise;
+    }
+
+    /**
+     * Metodo per creare la struttura iniziale del db
+     * @param dbInstance riferimento al db
+     * @param structure array di objectStore con relative proprietà
+     */
+    public createStructure(dbInstance: IDBDatabase, structure: Array<any>) {
+        structure.forEach(objStoreCnf => {
+            const objStoreParams: IDBObjectStoreParameters = new Object();
+            if (objStoreCnf.key) {
+                objStoreParams.keyPath = objStoreCnf.key;
+            }
+            if (objStoreCnf.autoIncrement) {
+                objStoreParams.autoIncrement = objStoreCnf.autoIncrement;
+            }
+            const objStore = dbInstance.createObjectStore(objStoreCnf.name, objStoreParams);
+            objStoreCnf.indexes.forEach(indexCnf => {
+                objStore.createIndex(indexCnf.name, indexCnf.field);
+            });
+        });
+    }
+
+    /**
+     * Metodo che inserisce una nuova entry su un objectStore del database
+     * @param dbInstance riferimento al db
+     * @param objStoreName nome dell'objectStore
+     * @param entry entry da inserire
+     */
+    public insertEntry(dbInstance: IDBDatabase, objStoreName: string, entry: any): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            const transaction = dbInstance.transaction(objStoreName, 'readwrite');
+            const objStore = transaction.objectStore(objStoreName);
+            objStore.add(entry);
+            // Inserimento entry ok
+            transaction.oncomplete = () => {
+                resolve();
+            };
+            // Inserimento entry ko
+            transaction.onerror = () => {
+                reject(transaction.error);
             };
         });
 

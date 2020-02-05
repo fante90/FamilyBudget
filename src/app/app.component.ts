@@ -3,7 +3,8 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { IndexedDBService } from './services/indexedDB.service';
+import { FamilyBudgetDBService } from './services/familyBudgetDB.service';
+import { UIService } from './services/ui.service';
 
 @Component({
   selector: 'app-root',
@@ -15,23 +16,24 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private indexedDBService: IndexedDBService
+    private familyBudgetDBService: FamilyBudgetDBService,
+    private uiService: UIService
   ) {
     this.initializeApp();
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
+ initializeApp() {
+    this.platform.ready().then(async () => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.indexedDBService.openDB('FamilyBudgetDB', 1).then((data) => {
-        alert('Db aperto con successo!');
-        if (data.updateNeeded) {
-          alert('E\' necessario aggiornare il db');
-        }
-      }, (error) => {
-        alert(error.code + ' ' + error.message);
-      });
+      try {
+        await this.familyBudgetDBService.openDB();
+      } catch (error) {
+        this.uiService.presentAlert({
+          message: error,
+          backdropDismiss: false
+        });
+      }
     });
   }
 }

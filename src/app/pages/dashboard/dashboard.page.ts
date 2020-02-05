@@ -20,40 +20,30 @@ export class DashboardPage implements OnInit {
    * Metodo utilizzato dal action button in basso a destra
    */
   public newOperation() {
-    this.uiService.presentActionSheet('Seleziona il tipo di operazione:', [
-      {
-        text: 'Registra entrata',
-        icon: 'arrow-round-down',
-        handler: () => {
-          this.presentModal(AddMovimentModalPage, { mvType: 'P' });
+    this.uiService.presentActionSheet({
+      header: 'Seleziona il tipo di operazione:',
+      buttons: [
+        {
+          text: 'Registra entrata',
+          icon: 'arrow-round-down',
+          handler: () => {
+            this.uiService.presentModal(AddMovimentModalPage, { mvType: 'P' });
+          }
+        }, {
+          text: 'Registra uscita',
+          icon: 'arrow-round-up',
+          handler: () => {
+            this.uiService.presentModal(AddMovimentModalPage, { mvType: 'M' });
+          }
+        }, {
+          text: 'Registra investimento',
+          icon: 'cash',
+          handler: () => {
+            this.uiService.presentModal(AddMovimentModalPage, { mvType: 'I' });
+          }
         }
-      }, {
-        text: 'Registra uscita',
-        icon: 'arrow-round-up',
-        handler: () => {
-          this.presentModal(AddMovimentModalPage, { mvType: 'M' });
-        }
-      }, {
-        text: 'Registra investimento',
-        icon: 'cash',
-        handler: () => {
-          this.presentModal(AddMovimentModalPage, { mvType: 'I' });
-        }
-      }
-    ]);
-  }
-
-  /**
-   * Metodo per aprire una pagina in modale
-   * @param modalPage nome della classe della pagina da aprire
-   * @param modalParams oggetto contenente i parametri da passare alla pagina aperta in modale
-   */
-  private async presentModal(modalPage: any, modalParams: { [key: string]: any; }) {
-    const modal = await this.modalCtrl.create({
-      component: modalPage,
-      componentProps: modalParams
+      ]
     });
-    await modal.present();
   }
 
   ngOnInit() {
