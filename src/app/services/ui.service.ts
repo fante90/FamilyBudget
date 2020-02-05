@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,6 +12,7 @@ export class UIService {
     private toastCtrl: ToastController,
     private modalCtrl: ModalController
   ) { }
+
 
   /**
    * Metodo per visualizzare un action sheet
