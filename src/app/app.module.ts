@@ -6,8 +6,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { AddMovimentModalPageModule } from './pages/modals/add-moviment-modal/add-moviment-modal.module';
 import { AddCategoryModalPageModule } from './pages/modals/add-category-modal/add-category-modal.module';
@@ -30,4 +30,4 @@ import { AddCategoryModalPageModule } from './pages/modals/add-category-modal/ad
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

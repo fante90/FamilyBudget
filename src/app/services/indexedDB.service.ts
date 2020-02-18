@@ -101,4 +101,28 @@ export class IndexedDBService {
 
         return promise;
     }
+
+    /**
+     * Metodo che restituisce le entry di un object store eventualmente filtrate
+     * @param dbInstance riferimento al db
+     * @param objStoreName nome dell'objectStore
+     * @param filter eventulae filtro
+     * @param direction eventuale ordinamento (next, prev)
+     */
+    public getEntries(dbInstance: IDBDatabase, objStoreName: string, filter: IDBKeyRange, direction: IDBCursorDirection = 'next'): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            const entries = [];
+            const objectStore = dbInstance.transaction(objStoreName).objectStore(objStoreName);
+            objectStore.openCursor(filter, direction).onsuccess = (event: any) => {
+                const cursor = event.target.result;
+                if (cursor) {
+                    entries.push(cursor.value);
+                    cursor.continue();
+                }
+            };
+            resolve(entries);
+        });
+
+        return promise;
+    }
 }

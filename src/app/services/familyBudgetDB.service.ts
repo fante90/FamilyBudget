@@ -74,10 +74,25 @@ export class FamilyBudgetDBService {
      */
     public insertEntry(objStoreName: string, entry: any) {
         const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.insertEntry(this.dbInstance, objStoreName, entry).then(() =>{
+            this.indexedDBService.insertEntry(this.dbInstance, objStoreName, entry).then(() => {
                 resolve();
             }, (error) => {
                 reject(error);
+            });
+        });
+        return promise;
+    }
+
+    /**
+     * Metodo che restituisce le entry di un object store eventualmente filtrate
+     * @param objStoreName nome dell'objectStore
+     * @param filter eventulae filtro
+     * @param direction eventuale ordinamento (next, prev)
+     */
+    public getEntries(objStoreName: string, filter: IDBKeyRange, direction: IDBCursorDirection = 'next'): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            this.indexedDBService.getEntries(this.dbInstance, objStoreName, null).then((entries) => {
+                resolve(entries);
             });
         });
         return promise;

@@ -13,14 +13,14 @@
     <ion-label position="floating">
       Tipo operazione <ion-text color="danger">*</ion-text>
     </ion-label>
-    <ion-select disabled required>
-      <ion-select-option [selected]="movimentType === 'P'" value="P">
+    <ion-select value="movimentType" disabled required>
+      <ion-select-option value="P">
         Entrata
       </ion-select-option>
-      <ion-select-option [selected]="movimentType === 'M'" value="M">
+      <ion-select-option value="M">
         Uscita
       </ion-select-option>
-      <ion-select-option [selected]="movimentType === 'I'" value="I">
+      <ion-select-option value="I">
         Investimento
       </ion-select-option>
     </ion-select>

@@ -18,7 +18,7 @@ export class MovimentCategory {
         { code: 'medium', description: 'Grigio' },
         { code: 'light', description: 'Grigio chiaro' },
     ];
-    private myObjStoreName = 'movimentCategories';
+    static myObjStoreName = 'movimentCategories';
 
     constructor(ID: number, description: string, type: string, color: string, icon: string) {
         this.ID = ID;
@@ -90,7 +90,7 @@ export class MovimentCategory {
      */
     public async save(AppDBService: FamilyBudgetDBService): Promise<boolean> {
         try {
-            await AppDBService.insertEntry(this.myObjStoreName, {
+            await AppDBService.insertEntry(MovimentCategory.myObjStoreName, {
                 description: this.description,
                 type: this.type,
                 color: this.color,
@@ -101,5 +101,14 @@ export class MovimentCategory {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Metodo per ottenere l'elenco delle categorie
+     */
+    public static async getEntries(AppDBService: FamilyBudgetDBService) {
+        let categories = [];
+        categories = await AppDBService.getEntries(this.myObjStoreName, null);
+        return categories;
     }
 }

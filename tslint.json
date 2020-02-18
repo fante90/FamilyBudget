@@ -21,7 +21,7 @@
     ],
     "member-access": false,
     "member-ordering": [
-      false,
+      true,
       {
         "order": [
           "static-field",
@@ -83,7 +83,6 @@
       "app",
       "page",
       "kebab-case"
-    ],
-    "no-string-literal": false
+    ]
   }
 }
