@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { MovimentCategory } from 'src/app/classes/MovimentCategory';
+import { MovimentCategory } from '../../classes/MovimentCategory';
 
 @Component({
   selector: 'app-add-moviment-modal',

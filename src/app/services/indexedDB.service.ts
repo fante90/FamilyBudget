@@ -109,7 +109,12 @@ export class IndexedDBService {
      * @param filter eventulae filtro
      * @param direction eventuale ordinamento (next, prev)
      */
-    public getEntries(dbInstance: IDBDatabase, objStoreName: string, filter: IDBKeyRange, direction: IDBCursorDirection = 'next'): Promise<any> {
+    public getEntries(
+        dbInstance: IDBDatabase,
+        objStoreName: string,
+        filter: IDBKeyRange,
+        direction: IDBCursorDirection = 'next'
+    ): Promise<any> {
         const promise = new Promise((resolve, reject) => {
             const entries = [];
             const objectStore = dbInstance.transaction(objStoreName).objectStore(objStoreName);
@@ -118,9 +123,10 @@ export class IndexedDBService {
                 if (cursor) {
                     entries.push(cursor.value);
                     cursor.continue();
+                } else {
+                    resolve(entries);
                 }
             };
-            resolve(entries);
         });
 
         return promise;

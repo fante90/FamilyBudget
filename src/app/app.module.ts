@@ -9,8 +9,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { AddMovimentModalPageModule } from './pages/modals/add-moviment-modal/add-moviment-modal.module';
-import { AddCategoryModalPageModule } from './pages/modals/add-category-modal/add-category-modal.module';
+import { AddMovimentModalPageModule } from './modals/add-moviment-modal/add-moviment-modal.module';
+import { AddCategoryModalPageModule } from './modals/add-category-modal/add-category-modal.module';
 
 @NgModule({
   declarations: [AppComponent],

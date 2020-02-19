@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Moviment } from '../classes/Moviment';
-import { UIService } from '../services/ui.service';
+import { Moviment } from '../../classes/Moviment';
+import { UIService } from '../../services/ui.service';
 import { ModalController } from '@ionic/angular';
-import { AddMovimentModalPage } from '../pages/modals/add-moviment-modal/add-moviment-modal.page';
+import { AddMovimentModalPage } from '../../modals/add-moviment-modal/add-moviment-modal.page';
 import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  styleUrls: ['home.page.scss']
 })
 export class Tab1Page implements OnInit {
 

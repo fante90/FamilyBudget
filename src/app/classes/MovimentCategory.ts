@@ -1,6 +1,5 @@
 import { MovimentTypes } from './MovimentsTypes';
 import { FamilyBudgetDBService } from '../services/familyBudgetDB.service';
-import { IndexedDBService } from '../services/indexedDB.service';
 
 // Classe che rappresenta la categoria di un movimento
 export class MovimentCategory {
@@ -106,8 +105,8 @@ export class MovimentCategory {
     /**
      * Metodo per ottenere l'elenco delle categorie
      */
-    public static async getEntries(AppDBService: FamilyBudgetDBService) {
-        let categories = [];
+    public static async getEntries(AppDBService: FamilyBudgetDBService): Promise<Array<any>> {
+        let categories: Array<any> = [];
         categories = await AppDBService.getEntries(this.myObjStoreName, null);
         return categories;
     }

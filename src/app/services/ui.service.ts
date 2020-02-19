@@ -27,6 +27,8 @@ export class UIService {
     (actionSheetParams.buttons) ? actionSheetParams.buttons.push(closeBtn) : actionSheetParams.buttons = [closeBtn];
     const actionSheet = await this.actionSheetCtrl.create(actionSheetParams);
     await actionSheet.present();
+
+    return actionSheet;
   }
 
   /**
@@ -36,6 +38,8 @@ export class UIService {
   public async presentAlert(alertParams: object) {
     const alert = await this.alertCtrl.create(alertParams);
     await alert.present();
+
+    return alert;
   }
 
   /**
@@ -45,6 +49,8 @@ export class UIService {
   public async presentToast(toastParams: object) {
     const toast = await this.toastCtrl.create(toastParams);
     await toast.present();
+
+    return toast;
   }
 
   /**
@@ -58,5 +64,7 @@ export class UIService {
       componentProps: modalParams
     });
     await modal.present();
+
+    return modal;
   }
 }
