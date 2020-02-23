@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -26,66 +26,78 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 .primary {
-    color: var(--ion-color-primary) !important;
+  color: var(--ion-color-primary) !important;
 }
 .primary-bg {
-    background-color: var(--ion-color-primary) !important;
+  background-color: var(--ion-color-primary) !important;
 }
 .primary-borders {
-    border-color: var(--ion-color-primary) !important;
+  border-color: var(--ion-color-primary) !important;
 }
 .secondary {
-    color: var(--ion-color-secondary) !important;
+  color: var(--ion-color-secondary) !important;
 }
 .secondary-bg {
-    background-color: var(--ion-color-secondary) !important;
+  background-color: var(--ion-color-secondary) !important;
 }
 .secondary-borders {
-    border-color: var(--ion-color-secondary) !important;
+  border-color: var(--ion-color-secondary) !important;
 }
 .tertiary {
-    color: var(--ion-color-tertiary) !important;
+  color: var(--ion-color-tertiary) !important;
 }
 .tertiary-bg {
-    background-color: var(--ion-color-tertiary) !important;
+  background-color: var(--ion-color-tertiary) !important;
 }
 .tertiary-borders {
-    border-color: var(--ion-color-tertiary) !important;
+  border-color: var(--ion-color-tertiary) !important;
 }
 .dark {
-    color: var(--ion-color-dark) !important;
+  color: var(--ion-color-dark) !important;
 }
 .dark-bg {
-    background-color: var(--ion-color-dark) !important;
+  background-color: var(--ion-color-dark) !important;
 }
 .dark-borders {
-    border-color: var(--ion-color-dark) !important;
+  border-color: var(--ion-color-dark) !important;
 }
 .medium {
-    color: var(--ion-color-medium) !important;
+  color: var(--ion-color-medium) !important;
 }
 .medium-bg {
-    background-color: var(--ion-color-medium) !important;
+  background-color: var(--ion-color-medium) !important;
 }
 .medium-borders {
-    border-color: var(--ion-color-medium) !important;
+  border-color: var(--ion-color-medium) !important;
 }
 .light {
-    color: var(--ion-color-light) !important;
+  color: var(--ion-color-light) !important;
 }
 .light-bg {
-    background-color: var(--ion-color-light) !important;
+  background-color: var(--ion-color-light) !important;
 }
 .light-borders {
-    border-color: var(--ion-color-light) !important;
+  border-color: var(--ion-color-light) !important;
+}
+
+// Rimuove l'ombra che fa da bordo inferiore all'header
+ion-header {
+  &.header-md:after {
+    background: none;
+  }
 }
 
 ion-title {
-    font-size:14px;
-    text-transform: uppercase;
+  font-size: 14px;
+  text-transform: uppercase;
 }
-/*
-small {
-    font-size:9px;
-    line-height: 11px;
-}*/
+
+.round-icon {
+  background-color: var(--ion-color-light);
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  width: 32px;
+  height: 32px;
+  text-align: center;
+  padding-top: 7px;
+}

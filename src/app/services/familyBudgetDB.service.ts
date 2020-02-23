@@ -84,6 +84,55 @@ export class FamilyBudgetDBService {
     }
 
     /**
+     * Metodo che aggiorna una entry di un objectStore del database
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da aggiornare
+     * @param entryUpd valori aggiornati dell'entry
+     */
+    public updateEntry(objStoreName: string, entryKey: any, entryUpd: any) {
+        const promise = new Promise((resolve, reject) => {
+            this.indexedDBService.updateEntry(this.dbInstance, objStoreName, entryKey, entryUpd).then(() => {
+                resolve();
+            }, (error) => {
+                reject(error);
+            });
+        });
+        return promise;
+    }
+
+    /**
+     * Metodo che cancella un entry su un objectStore del database
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da cancellare
+     */
+    public deleteEntry(objStoreName: string, entryKey: any) {
+        const promise = new Promise((resolve, reject) => {
+            this.indexedDBService.deleteEntry(this.dbInstance, objStoreName, entryKey).then(() => {
+                resolve();
+            }, (error) => {
+                reject(error);
+            });
+        });
+        return promise;
+    }
+
+    /**
+     * Metodo che restituisce una entry di un object store
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da cancellare
+     */
+    public getEntry(objStoreName: string, entryKey: any): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            this.indexedDBService.getEntry(this.dbInstance, objStoreName, entryKey).then((entry) => {
+                resolve(entry);
+            }, (error) => {
+                reject(error);
+            });
+        });
+        return promise;
+    }
+
+    /**
      * Metodo che restituisce le entry di un object store eventualmente filtrate
      * @param objStoreName nome dell'objectStore
      * @param filter eventulae filtro

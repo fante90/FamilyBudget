@@ -23,19 +23,18 @@
       ></ion-icon>
     </ion-list-header>
     <ion-item
-      class="moviment"
       mode="ios"
       *ngFor="let moviment of moviments; let i = index"
     >
-      <div slot="start" class="icon {{ moviment.getCategory().getColor() }}-borders">
+      <div slot="start" class="round-icon {{ moviment.getCategory().color }}-borders">
         <ion-icon
-          color="{{ moviment.getCategory().getColor() }}"
-          name="{{ moviment.getCategory().getIcon() }}"
+          color="{{ moviment.getCategory().color }}"
+          name="{{ moviment.getCategory().icon }}"
         ></ion-icon>
       </div>
       <ion-label>
         <h4>{{ moviment.getDate() }}</h4>
-        <small class="ion-text-uppercase">{{ moviment.getCategory().getDescription() }}</small>
+        <small class="ion-text-uppercase">{{ moviment.getCategory().description }}</small>
         <p>{{ moviment.getNote() }}</p>
       </ion-label>
       <div slot="end">

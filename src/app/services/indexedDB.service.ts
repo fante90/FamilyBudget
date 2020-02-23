@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AngularDelegate } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -96,6 +97,89 @@ export class IndexedDBService {
             // Inserimento entry ko
             transaction.onerror = () => {
                 reject(transaction.error);
+            };
+        });
+
+        return promise;
+    }
+
+    /**
+     * Metodo che aggiorna una entry di un objectStore del database
+     * @param dbInstance riferimento al db
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da aggiornare
+     * @param entryUpd valori aggiornati dell'entry
+     */
+    public updateEntry(dbInstance: IDBDatabase, objStoreName: string, entryKey: any, entryUpd: any): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            const transaction = dbInstance.transaction(objStoreName, 'readwrite');
+            const objStore = transaction.objectStore(objStoreName);
+            const request = objStore.get(entryKey);
+            // entry trovata, eseguo l'aggiornamento
+            request.onsuccess = (event: any) => {
+                let data = event.target.result;
+                data = Object.assign(data, entryUpd);
+                const requestUpdate = objStore.put(data);
+                // Aggiornamento entry ok
+                requestUpdate.onsuccess = () => {
+                    resolve();
+                };
+                // Aggiornamento entry ko
+                requestUpdate.onerror = () => {
+                    reject(requestUpdate.error.message);
+                };
+            };
+            // entry non trovata
+            request.onerror = () => {
+                reject(request.error.message);
+            };
+        });
+
+        return promise;
+    }
+
+    /**
+     * Metodo che cancella una entry di un objectStore del database
+     * @param dbInstance riferimento al db
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da cancellare
+     */
+    public deleteEntry(dbInstance: IDBDatabase, objStoreName: string, entryKey: any): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            const transaction = dbInstance.transaction(objStoreName, 'readwrite');
+            const objStore = transaction.objectStore(objStoreName);
+            objStore.delete(entryKey);
+            // cancellazione entry ok
+            transaction.oncomplete = () => {
+                resolve();
+            };
+            // cancellazione entry ko
+            transaction.onerror = () => {
+                reject(transaction.error);
+            };
+        });
+
+        return promise;
+    }
+
+    /**
+     * Metodo che restituisce una entry di un object store
+     * @param dbInstance riferimento al db
+     * @param objStoreName nome dell'objectStore
+     * @param entryKey chiave dell'entry da restituire
+     */
+    public getEntry(dbInstance: IDBDatabase, objStoreName: string, entryKey: any): Promise<any> {
+        const promise = new Promise((resolve, reject) => {
+            const transaction = dbInstance.transaction(objStoreName, 'readwrite');
+            const objStore = transaction.objectStore(objStoreName);
+            const request = objStore.get(entryKey);
+            // entry trovata
+            request.onsuccess = (event: any) => {
+                resolve(event.target.result);
+            };
+            // entry non trovata
+            request.onerror = () => {
+                reject(request.error.message);
             };
         });
 

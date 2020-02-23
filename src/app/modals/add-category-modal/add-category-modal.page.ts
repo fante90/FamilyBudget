@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 import { MovimentTypes } from 'src/app/classes/MovimentsTypes';
@@ -10,10 +10,10 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
   templateUrl: './add-category-modal.page.html',
   styleUrls: ['./add-category-modal.page.scss'],
 })
-export class AddCategoryModalPage implements OnInit {
+export class AddCategoryModalPage {
 
-  public model = { ID: 0, description: '', type: '', color: '', icon: '' };
-  public movimentsTypes = [];
+  public model: IMovimentCategory = { ID: 0, description: '', type: '', color: '', icon: '' };
+  public movimentsTypes: Array<IMovimentType> = [];
   public colors = [];
   public submitted = false;
 
@@ -24,13 +24,28 @@ export class AddCategoryModalPage implements OnInit {
     private appDBService: FamilyBudgetDBService
   ) { }
 
-  ngOnInit() {
+  async ionViewDidEnter() {
     const ID = this.navParams.get('ID');
     this.movimentsTypes = MovimentTypes.getMovimentTypes();
     this.colors = MovimentCategory.getColors();
     // Se è arrivato un ID sono in edit, devo fare la retrieve del record da db
     if (ID) {
-      // TODO
+      try {
+        this.model = await MovimentCategory.getEntry(this.appDBService, ID);
+      } catch (error) {
+        this.uiService.presentAlert({
+          header: 'ERRORE',
+          message: 'Categoria non valida o rimossa',
+          buttons: [
+            {
+              text: 'Chiudi',
+              role: 'cancel',
+              cssClass: 'primary'
+            }
+          ]
+        });
+        this.modalCtrl.dismiss();
+      }
     }
   }
 
@@ -47,7 +62,7 @@ export class AddCategoryModalPage implements OnInit {
       this.model.icon
     );
     // Valido il record inserito
-    if (!movimentCategory.valid()) {
+    if (!await movimentCategory.valid(this.appDBService)) {
       this.submitted = false;
       this.uiService.presentAlert({
         header: 'ERRORE',
@@ -77,7 +92,7 @@ export class AddCategoryModalPage implements OnInit {
         });
       } else { // Tutto ok
         this.uiService.presentToast({
-          message: 'Categoria inserita correttamente',
+          message: (this.model.ID) ? 'Categoria aggiornata correttamente' : 'Categoria inserita correttamente',
           duration: 2000,
           color: 'success'
         });
