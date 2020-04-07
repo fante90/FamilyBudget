@@ -30,7 +30,7 @@ export class ListCategoriesPage {
    * Metodo utilizzato dal item option di modifica presente sulle categorie
    */
   public async editCategory(category: IMovimentCategory) {
-    const modal = await this.uiService.presentModal(AddCategoryModalPage, { ID: category.ID });
+    const modal = await this.uiService.presentModal(AddCategoryModalPage, { ID: category._id });
     modal.onDidDismiss().then(() => {
       this.refreshCategories();
     });
@@ -59,8 +59,11 @@ export class ListCategoriesPage {
   }
 
   private async delete(category: IMovimentCategory) {
-    const movCategory = new MovimentCategory(category.ID, category.description, category.type, category.color, category.icon);
-    const result: boolean = await movCategory.delete(this.appDBService);
+    const movCategory = new MovimentCategory(this.appDBService);
+    let result: boolean = await movCategory.findEntry(category._id);
+    if (result) {
+      result = await movCategory.delete();
+    }
     if (result === false) { // Errore
       this.uiService.presentAlert({
         header: 'ERRORE',

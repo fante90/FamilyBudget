@@ -1,99 +1,75 @@
 import { Injectable } from '@angular/core';
-import { IndexedDBService } from './indexedDB.service';
+import PouchDB from 'pouchdb';
+import PouchDBFind from 'pouchdb-find';
 
 @Injectable({
     providedIn: 'root'
 })
 export class FamilyBudgetDBService {
     private DB_NAME = 'FamilyBudgetDB';
-    private DB_VERSION = 1;
-    private dbInstance: IDBDatabase = null;
+    private dbInstance: PouchDB.Database = null;
 
-    constructor(private indexedDBService: IndexedDBService) { }
+    constructor() {
+        PouchDB.plugin(PouchDBFind);
+    }
 
     /**
-     * Metodo per aprire il db, se non esiste o se è ad una versione precedente questo viene creato/aggiornato
+     * Metodo che apre la connessione al db
      * Da richiamare in fase di inizializzazione dell'app
      */
     public openDB(): Promise<any> {
         const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.openDB(this.DB_NAME, this.DB_VERSION).then((data) => {
-                this.dbInstance = data.db;
-                if (data.updateNeeded) {
-                    // è necessario aggiornare il db
-                    this.initOrUpdateDB(data.oldVersion);
-                    resolve();
-                } else {
-                    resolve();
-                }
-            }, (error) => {
-                reject(error.code + ' ' + error.message);
-            });
+            if (!this.dbInstance) {
+                this.dbInstance = new PouchDB(this.DB_NAME);
+            }
+            resolve();
         });
         return promise;
     }
 
     /**
-     * Inizializza o aggiorna il db a seconda della versione del db attualmente presente sul browser dell'utente
-     * @param currVersion versione del db attualmente presente sul browser dell'utente
-     */
-    private initOrUpdateDB(currVersion: number) {
-        if (currVersion < 1) {
-            // Prima versione del db, inizializzo gli object store dei movimenti e delle categorie di movimento
-            const structure = [
-                {
-                    name: 'moviments',
-                    key: 'ID',
-                    autoIncrement: true,
-                    indexes: [
-                        {
-                            name: 'by_date',
-                            field: 'date'
-                        },
-                        {
-                            name: 'by_category',
-                            field: 'category'
-                        }
-                    ]
-                },
-                {
-                    name: 'movimentCategories',
-                    key: 'ID',
-                    autoIncrement: true,
-                    indexes: []
-                }
-            ];
-            this.indexedDBService.createStructure(this.dbInstance, structure);
-        }
-    }
-
-    /**
-     * Metodo che inserisce una nuova entry su un objectStore del database
-     * @param objStoreName nome dell'objectStore
+     * Metodo che inserisce una nuova entry nel database
      * @param record entry da inserire
      */
-    public insertEntry(objStoreName: string, entry: any) {
+    public insertEntry(entityName: string, entry: any) {
         const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.insertEntry(this.dbInstance, objStoreName, entry).then(() => {
-                resolve();
-            }, (error) => {
-                reject(error);
-            });
+            let id = '000001';
+            // ottengo l'ultimo id per la stessa entità
+            this.getEntries(entityName, true, 1).then(
+                (lastDocs: Array<any>) => {
+                    if (lastDocs && lastDocs.length > 0) {
+                        const lastId: number = parseInt(lastDocs[0]._id.replace(entityName + ':', ''), 10);
+                        id = ('00000' + (lastId + 1).toString()).slice(-6);
+                    }
+                    entry._id = entityName + ':' + id;
+                    entry.entity = entityName;
+                    this.dbInstance.put(entry).then(() => {
+                        resolve();
+                    }).catch((error) => {
+                        reject(error);
+                    });
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
         });
         return promise;
     }
 
     /**
-     * Metodo che aggiorna una entry di un objectStore del database
-     * @param objStoreName nome dell'objectStore
+     * Metodo che aggiorna una entry del database
      * @param entryKey chiave dell'entry da aggiornare
      * @param entryUpd valori aggiornati dell'entry
      */
-    public updateEntry(objStoreName: string, entryKey: any, entryUpd: any) {
+    public updateEntry(entryKey: string, entryUpd: any) {
         const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.updateEntry(this.dbInstance, objStoreName, entryKey, entryUpd).then(() => {
+            this.dbInstance.get(entryKey).then((entry) => {
+                entry = Object.assign(entry, entryUpd);
+                return this.dbInstance.put(entry);
+            }).then(() => {
                 resolve();
-            }, (error) => {
+            }).catch((error) => {
                 reject(error);
             });
         });
@@ -101,15 +77,16 @@ export class FamilyBudgetDBService {
     }
 
     /**
-     * Metodo che cancella un entry su un objectStore del database
-     * @param objStoreName nome dell'objectStore
+     * Metodo che cancella un entry del database
      * @param entryKey chiave dell'entry da cancellare
      */
-    public deleteEntry(objStoreName: string, entryKey: any) {
+    public deleteEntry(entryKey: string) {
         const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.deleteEntry(this.dbInstance, objStoreName, entryKey).then(() => {
+            this.dbInstance.get(entryKey).then((entry) => {
+                return this.dbInstance.remove(entry);
+            }).then(() => {
                 resolve();
-            }, (error) => {
+            }).catch((error) => {
                 reject(error);
             });
         });
@@ -117,15 +94,14 @@ export class FamilyBudgetDBService {
     }
 
     /**
-     * Metodo che restituisce una entry di un object store
-     * @param objStoreName nome dell'objectStore
-     * @param entryKey chiave dell'entry da cancellare
+     * Metodo che restituisce un entry del database
+     * @param entryKey chiave dell'entry che si vuole ottenere
      */
-    public getEntry(objStoreName: string, entryKey: any): Promise<any> {
-        const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.getEntry(this.dbInstance, objStoreName, entryKey).then((entry) => {
+    public getEntry(entryKey: string): Promise<any> {
+        const promise = new Promise<{}>((resolve, reject) => {
+            this.dbInstance.get(entryKey).then((entry) => {
                 resolve(entry);
-            }, (error) => {
+            }).catch((error) => {
                 reject(error);
             });
         });
@@ -133,16 +109,55 @@ export class FamilyBudgetDBService {
     }
 
     /**
-     * Metodo che restituisce le entry di un object store eventualmente filtrate
-     * @param objStoreName nome dell'objectStore
-     * @param filter eventulae filtro
-     * @param direction eventuale ordinamento (next, prev)
+     * Metodo che restituisce le entry di un'entità
+     * @param entityName nome dell'entità
+     * @param desc ordina in modo decrescente
+     * @param limit numero di record da restituire
+     * @param customSelector permette di definire un filtro sui dati
      */
-    public getEntries(objStoreName: string, filter: IDBKeyRange, direction: IDBCursorDirection = 'next'): Promise<any> {
-        const promise = new Promise((resolve, reject) => {
-            this.indexedDBService.getEntries(this.dbInstance, objStoreName, null).then((entries) => {
-                resolve(entries);
-            });
+    public getEntries(entityName: string, desc?: boolean, limit?: number, customSelector?: any): Promise<Array<any>> {
+        const promise = new Promise<Array<{}>>((resolve, reject) => {
+            if (customSelector) {
+                // in questo caso diventa necessario creare un indice, deduco i campi dell'indice dal selector ricevuto
+                this.dbInstance.createIndex({
+                    index: { fields: Object.keys(customSelector) }
+                }).then(() => {
+                    // costruisco l'array dei campi da passare nella proprietà sort
+                    const fields = Object.keys(customSelector);
+                    const sort = [];
+                    fields.forEach(field => {
+                        const obj = {};
+                        obj[field] = (desc) ? 'desc' : 'asc';
+                        sort.push(obj);
+                    });
+                    this.dbInstance.find({
+                        selector: customSelector,
+                        sort,
+                        limit: (limit) ? limit : null
+                    }).then((results) => {
+                        resolve(results.docs);
+                    }).catch((error) => {
+                        reject(error);
+                    });
+                }).catch((error) => {
+                    reject(error);
+                });
+            } else {
+                this.dbInstance.find({
+                    selector: {
+                        _id: {
+                            $gt: entityName + ':',
+                            $lt: entityName + ':\uffff'
+                        },
+                    },
+                    sort: [{ _id: (desc) ? 'desc' : 'asc' }],
+                    limit: (limit) ? limit : null
+                }).then((results) => {
+                    resolve(results.docs);
+                }).catch((error) => {
+                    reject(error);
+                });
+            }
         });
         return promise;
     }

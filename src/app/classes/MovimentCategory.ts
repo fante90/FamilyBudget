@@ -1,47 +1,37 @@
 import { MovimentTypes } from './MovimentsTypes';
-import { FamilyBudgetDBService } from '../services/familyBudgetDB.service';
+import { Entity } from './Entity';
 
 // Classe che rappresenta la categoria di un movimento
-export class MovimentCategory implements IMovimentCategory {
-    ID: number;
-    description: string;
-    type: string;
-    color: string;
-    icon: string;
-    private errors: Array<string>;
+export class MovimentCategory extends Entity {
+    public description: string;
+    public type: string;
+    public color: string;
+    public icon: string;
+    protected fieldProperties = ['_id', 'description', 'type', 'color', 'icon'];
+
+    static entityName = 'movimentCategories';
     static colors = [
-        { code: 'primary', description: 'Blu' },
-        { code: 'secodary', description: 'Azzurro' },
         { code: 'tertiary', description: 'Arancione' },
-        { code: 'dark', description: 'Nero' },
+        { code: 'secodary', description: 'Azzurro' },
+        { code: 'primary', description: 'Blu' },
         { code: 'medium', description: 'Grigio' },
         { code: 'light', description: 'Grigio chiaro' },
+        { code: 'dark', description: 'Nero' },
+        { code: 'success', description: 'Verde' }
     ];
-    static myObjStoreName = 'movimentCategories';
-
-    constructor(ID: number, description: string, type: string, color: string, icon: string) {
-        this.ID = ID;
-        this.description = description;
-        this.type = type;
-        this.color = color;
-        this.icon = icon;
-    }
 
     public static getColors() {
         return this.colors;
-    }
-    public getErrors() {
-        return this.errors;
     }
 
     /**
      * Metodo per validare la categoria prima di un salvataggio su db
      */
-    public async valid(AppDBService: FamilyBudgetDBService): Promise<boolean> {
+    public async valid(): Promise<boolean> {
         this.errors = []; // Azzero l'array degli errori
-        if (this.ID) {
+        if (this._id) {
             try {
-                await AppDBService.getEntry(MovimentCategory.myObjStoreName, this.ID);
+                await this.appDBService.getEntry(this._id);
             } catch (error) {
                 this.errors.push(error);
                 return false;
@@ -72,9 +62,8 @@ export class MovimentCategory implements IMovimentCategory {
 
     /**
      * Metodo per inserire/aggiornare una categoria
-     * @param AppDBService riferimento al db
      */
-    public async save(AppDBService: FamilyBudgetDBService): Promise<boolean> {
+    public async save(): Promise<boolean> {
         try {
             const entryData = {
                 description: this.description,
@@ -82,48 +71,15 @@ export class MovimentCategory implements IMovimentCategory {
                 color: this.color,
                 icon: this.icon
             };
-            if (this.ID) { // Modifica
-                await AppDBService.updateEntry(MovimentCategory.myObjStoreName, this.ID, entryData);
+            if (this._id) { // Modifica
+                await this.appDBService.updateEntry(this._id, entryData);
             } else { // Inserimento
-                await AppDBService.insertEntry(MovimentCategory.myObjStoreName, entryData);
+                await this.appDBService.insertEntry(MovimentCategory.entityName, entryData);
             }
         } catch (error) {
             this.errors.push(error);
             return false;
         }
         return true;
-    }
-
-    /**
-     * Metodo per cancellare una categoria
-     * @param AppDBService riferimento al db
-     */
-    public async delete(AppDBService: FamilyBudgetDBService): Promise<boolean> {
-        try {
-            // TODO : Valutare se la categoria è usata prima di cancellarla
-            await AppDBService.deleteEntry(MovimentCategory.myObjStoreName, this.ID);
-        } catch (error) {
-            this.errors.push(error);
-            return false;
-        }
-        return true;
-    }
-
-    public static async getEntry(AppDBService: FamilyBudgetDBService, ID: number): Promise<IMovimentCategory> {
-        try {
-            const entry: IMovimentCategory = await AppDBService.getEntry(this.myObjStoreName, ID);
-            return entry;
-        } catch (error) {
-            return null;
-        }
-    }
-
-    /**
-     * Metodo per ottenere l'elenco delle categorie
-     */
-    public static async getEntries(AppDBService: FamilyBudgetDBService): Promise<Array<IMovimentCategory>> {
-        let categories: Array<any> = [];
-        categories = await AppDBService.getEntries(this.myObjStoreName, null);
-        return categories;
     }
 }

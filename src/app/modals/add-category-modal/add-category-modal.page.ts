@@ -12,7 +12,7 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
 })
 export class AddCategoryModalPage {
 
-  public model: IMovimentCategory = { ID: 0, description: '', type: '', color: '', icon: '' };
+  public model: IMovimentCategory = { _id: null, description: '', type: '', color: '', icon: '' };
   public movimentsTypes: Array<IMovimentType> = [];
   public colors = [];
   public submitted = false;
@@ -54,15 +54,10 @@ export class AddCategoryModalPage {
    */
   public async onSubmit() {
     this.submitted = true;
-    const movimentCategory = new MovimentCategory(
-      this.model.ID,
-      this.model.description,
-      this.model.type,
-      this.model.color,
-      this.model.icon
-    );
+    const movimentCategory = new MovimentCategory(this.appDBService);
+    movimentCategory.modelToEntity(this.model);
     // Valido il record inserito
-    if (!await movimentCategory.valid(this.appDBService)) {
+    if (!await movimentCategory.valid()) {
       this.submitted = false;
       this.uiService.presentAlert({
         header: 'ERRORE',
@@ -77,7 +72,7 @@ export class AddCategoryModalPage {
       });
     } else {
       // Effettuo il salvataggio su db
-      const result = await movimentCategory.save(this.appDBService);
+      const result = await movimentCategory.save();
       if (result === false) { // Errore
         this.uiService.presentAlert({
           header: 'ERRORE',
@@ -92,7 +87,7 @@ export class AddCategoryModalPage {
         });
       } else { // Tutto ok
         this.uiService.presentToast({
-          message: (this.model.ID) ? 'Categoria aggiornata correttamente' : 'Categoria inserita correttamente',
+          message: (this.model._id) ? 'Categoria aggiornata correttamente' : 'Categoria inserita correttamente',
           duration: 2000,
           color: 'success'
         });

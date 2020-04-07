@@ -1,5 +1,5 @@
 interface IMovimentCategory {
-    ID: number;
+    _id: string;
     description: string;
     type: string;
     color: string;

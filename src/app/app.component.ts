@@ -6,6 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { FamilyBudgetDBService } from './services/familyBudgetDB.service';
 import { UIService } from './services/ui.service';
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

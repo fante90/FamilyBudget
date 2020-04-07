@@ -9,44 +9,59 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-item>
-    <ion-label position="floating">
-      Tipo operazione <ion-text color="danger">*</ion-text>
-    </ion-label>
-    <ion-select value="movimentType" disabled required>
-      <ion-select-option value="P">
-        Entrata
-      </ion-select-option>
-      <ion-select-option value="M">
-        Uscita
-      </ion-select-option>
-      <ion-select-option value="I">
-        Investimento
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Categoria</ion-label>
-    <ion-select>
-      <ion-select-option 
-        *ngFor="let movimentCat of movimentCategories; let i = index" 
-        value="{{ movimentCat.getID() }}"
-      >
-        {{ movimentCat.getDescription() }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Importo <ion-text color="danger">*</ion-text></ion-label>
-    <ion-input required type="number"></ion-input>
-    <div slot="end" class="ion-padding-top">
+  <form (ngSubmit)="onSubmit()" #formCtrl="ngForm">
+    <ion-input type="hidden" [(ngModel)]="model._id" name="id"></ion-input>
+    <ion-item>
+      <ion-label position="floating">
+        Tipo operazione <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-select disabled required [(ngModel)]="model.type" name="type">
+        <ion-select-option 
+          *ngFor="let movType of movimentsTypes; let i = index" 
+          value="{{ movType.code }}"
+        >
+          {{ movType.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Data <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY HH:mm" [(ngModel)]="model.date" name="date"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Categoria <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-select required [(ngModel)]="model.id_category" name="id_category">
+        <ion-select-option
+          *ngFor="let movimentCat of movimentCategories; let i = index"
+          value="{{ movimentCat._id }}"
+        >
+          {{ movimentCat.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Importo <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input required type="number" [(ngModel)]="model.value" name="value"></ion-input>
+      <div slot="end" class="ion-padding-top">
         <ion-icon color="medium" name="logo-euro"></ion-icon>
+      </div>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Note
+      </ion-label>
+      <ion-textarea [(ngModel)]="model.note" name="note"></ion-textarea>
+    </ion-item>
+    <div class="ion-padding">
+      <ion-button color="tertiary" expand="block" type="submit" [disabled]="!formCtrl.form.valid || submitted" class="ion-no-margin">
+        Registra
+      </ion-button>
     </div>
-  </ion-item>
-
-  <div class="ion-padding">
-    <ion-button color="tertiary" expand="block" type="submit" class="ion-no-margin">
-      Registra
-    </ion-button>
-  </div>
+  </form>
 </ion-content>
