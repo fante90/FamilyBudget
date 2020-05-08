@@ -1,18 +1,15 @@
-<ion-header>
-  <ion-toolbar mode="ios">
-    <ion-buttons slot="start">
-      <ion-menu-button mode="ios" autoHide="false"></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<div>
+  <ion-list mode="ios">
+    <ion-list-header class="ion-padding-bottom">
+      Categorie
+    </ion-list-header>
+  </ion-list>
+</div>
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="refreshCategories($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list lines="full" mode="ios">
-    <ion-list-header>
-      Categorie
-    </ion-list-header>
     <ion-item-sliding
       mode="ios"
       *ngFor="let category of categories; let i = index"
@@ -43,10 +40,18 @@
       </ion-label>
     </ion-item>
   </ion-list>
-  
+</ion-content>
+<ion-footer>
+  <ion-list lines="none" class="ion-no-padding">
+    <ion-item color="light">
+      <ion-label>
+        &nbsp;
+      </ion-label>
+    </ion-item>
+  </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="newCategory()" color="tertiary">
+    <ion-fab-button (click)="newCategory()" size="small" color="tertiary">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</ion-content>
+</ion-footer>

@@ -22,7 +22,7 @@ export class ListCategoriesPage {
   public async newCategory() {
     const modal = await this.uiService.presentModal(AddCategoryModalPage, {});
     modal.onDidDismiss().then(() => {
-      this.refreshCategories();
+      this.refreshList();
     });
   }
 
@@ -32,7 +32,7 @@ export class ListCategoriesPage {
   public async editCategory(category: IMovimentCategory) {
     const modal = await this.uiService.presentModal(AddCategoryModalPage, { ID: category._id });
     modal.onDidDismiss().then(() => {
-      this.refreshCategories();
+      this.refreshList();
     });
   }
 
@@ -42,7 +42,7 @@ export class ListCategoriesPage {
   public async deleteCategory(category: IMovimentCategory) {
     this.uiService.presentAlert({
       header: 'Elimina categoria',
-      text: 'Sei sicuro di voler eliminare la categoria ' + category.description + '?',
+      message: 'Sei sicuro di voler eliminare la categoria ' + category.description + '?',
       buttons: [
         {
           text: 'Annulla',
@@ -82,7 +82,7 @@ export class ListCategoriesPage {
         duration: 2000,
         color: 'success'
       });
-      this.refreshCategories();
+      this.refreshList();
     }
   }
 
@@ -97,7 +97,7 @@ export class ListCategoriesPage {
   /**
    * Metodo che inizializza/aggiorna l'elenco delle categorie
    */
-  public refreshCategories(event = null) {
+  public refreshList(event = null) {
     MovimentCategory.getEntries(this.appDBService).then(result => {
       this.categories = result;
       if (event) {
@@ -107,7 +107,7 @@ export class ListCategoriesPage {
   }
 
   ionViewDidEnter() {
-    this.refreshCategories();
+    this.refreshList();
   }
 
 }

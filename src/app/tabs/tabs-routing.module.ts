@@ -13,27 +13,27 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: () =>
-              import('./home/home.module').then(m => m.Tab1PageModule)
+              import('./home/home.module').then(m => m.HomePageModule)
           }
         ]
       },
       {
-        path: 'tab2',
+        path: 'list-moviments',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+              import('./list-moviments/list-moviments.module').then(m => m.ListMovimentPageModule)
           }
         ]
       },
       {
-        path: 'tab3',
+        path: 'stats',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+              import('./stats/stats.module').then(m => m.StatsPageModule)
           }
         ]
       },

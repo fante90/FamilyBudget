@@ -13,7 +13,7 @@
     <ion-input type="hidden" [(ngModel)]="model._id" name="id"></ion-input>
     <ion-item>
       <ion-label position="floating">
-        Tipo operazione <ion-text color="danger">*</ion-text>
+        Tipo movimento <ion-text color="danger">*</ion-text>
       </ion-label>
       <ion-select disabled required [(ngModel)]="model.type" name="type">
         <ion-select-option 
@@ -37,7 +37,7 @@
       <ion-select required [(ngModel)]="model.id_category" name="id_category">
         <ion-select-option
           *ngFor="let movimentCat of movimentCategories; let i = index"
-          value="{{ movimentCat._id }}"
+          [value]="movimentCat._id"
         >
           {{ movimentCat.description }}
         </ion-select-option>

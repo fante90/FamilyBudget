@@ -1,0 +1,57 @@
+<ion-header mode="ios">
+  <ion-toolbar color="secondary" mode="ios">
+    <div>
+      <ion-title>IMPOSTA FILTRI</ion-title>
+    </div>
+    <ion-button mode="ios" fill="clear" slot="end" (click)="dismissModal()">
+      <ion-icon color="dark" name="close"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+<ion-content> 
+  <form (ngSubmit)="dismissModal()" #formCtrl="ngForm">
+    <ion-item>
+      <ion-label position="floating">
+        Da Data <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-datetime required displayFormat="DD/MM/YYYY" [(ngModel)]="model.fromDate" name="fromDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        A Data <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-datetime required displayFormat="DD/MM/YYYY" [(ngModel)]="model.toDate" name="toDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Tipo movimento
+      </ion-label>
+      <ion-select [(ngModel)]="model.type" name="type" (ngModelChange)="changeMovType($event)">
+        <ion-select-option 
+          *ngFor="let movType of movimentTypes; let i = index" 
+          value="{{ movType.code }}"
+        >
+          {{ movType.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
+        Categoria movimento
+      </ion-label>
+      <ion-select [(ngModel)]="model.category" name="category">
+        <ion-select-option 
+          *ngFor="let movCategory of movimentCategories; let i = index" 
+          value="{{ movCategory._id }}"
+        >
+          {{ movCategory.description }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <div class="ion-padding">
+      <ion-button color="tertiary" expand="block" type="submit" [disabled]="!formCtrl.form.valid" class="ion-no-margin">
+        Applica
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

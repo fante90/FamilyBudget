@@ -1,0 +1,81 @@
+<div>
+  <ion-list mode="ios">
+    <ion-list-header class="ion-padding-bottom">
+      <ion-label class="ion-no-margin">Movimenti</ion-label>
+      <ion-icon
+        (click)="openModalSetFilter()"
+        class="ion-float-right ion-padding-horizontal"
+        color="dark"
+        size="large"
+        name="options-outline"
+      ></ion-icon>
+    </ion-list-header>
+  </ion-list>
+</div>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list lines="full" mode="ios">
+    <ion-item-sliding
+      mode="ios"
+      *ngFor="let moviment of moviments; let i = index"
+    >
+      <ion-item>
+        <div
+          slot="start"
+          class="round-icon {{ moviment.category?.color }}-borders"
+        >
+          <ion-icon
+            *ngIf="moviment.category?.icon"
+            color="{{ moviment.category?.color }}"
+            name="{{ moviment.category?.icon }}"
+          ></ion-icon>
+        </div>
+        <ion-label>
+          <h3>{{ moviment.date | date:'dd/MM/yyyy' }}</h3>
+          <h5 class="ion-text-uppercase">
+            <small>{{ moviment.category?.description }}</small>
+          </h5>
+          <p>{{ moviment.note }}</p>
+        </ion-label>
+        <div slot="end">
+          <ion-label>
+            <p>
+              <strong class="ion-text-right">
+                {{ moviment.value | number:'1.2-2' }} &euro;
+              </strong>
+            </p>
+          </ion-label>
+        </div>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="editMoviment(moviment)" color="secondary"
+          ><ion-icon name="pencil"></ion-icon
+        ></ion-item-option>
+        <ion-item-option (click)="deleteMoviment(moviment)" color="danger"
+          ><ion-icon name="trash-outline"></ion-icon
+        ></ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-item lines="none" *ngIf="moviments.length==0">
+      <ion-label>
+        <p>Nessun movimento inserito</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-list lines="none" class="ion-no-padding">
+    <ion-item color="light">
+      <ion-label>
+        <h3><strong>TOTALE: {{ getTotal() | number:'1.2-2' }} &euro;</strong></h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newMoviment()" size="small" color="tertiary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-footer>

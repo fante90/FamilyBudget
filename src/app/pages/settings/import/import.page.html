@@ -1,0 +1,54 @@
+<div>
+  <ion-list mode="ios">
+    <ion-list-header class="ion-padding-bottom">
+      <ion-icon
+        routerLink="/settings"
+        class="ion-float-left ion-padding-end"
+        color="dark"
+        name="chevron-back-outline"
+      ></ion-icon>
+      <ion-label class="ion-no-margin">
+        Importazione dati
+      </ion-label>
+    </ion-list-header>
+  </ion-list>
+</div>
+<ion-content>
+  <ion-list lines="full" mode="ios">
+    <ion-item (click)="downloadMovModel()">
+      <ion-icon slot="start" name="download-outline"></ion-icon>
+      <ion-label>
+        <h3>Scarica modello movimenti</h3>
+        <p>Download modello .csv</p>
+      </ion-label>
+    </ion-item>
+    <ion-item (click)="importData(0)">
+      <ion-icon slot="start" name="swap-vertical-outline"></ion-icon>
+      <ion-label>
+        <h3>Importa movimenti</h3>
+        <p>Importa massivamente un elenco di movimenti</p>
+      </ion-label>
+    </ion-item>
+    <ion-item (click)="downloadCatModel()">
+      <ion-icon slot="start" name="download-outline"></ion-icon>
+      <ion-label>
+        <h3>Scarica modello categorie</h3>
+        <p>Download modello .csv</p>
+      </ion-label>
+    </ion-item>
+    <ion-item (click)="importData(1)">
+      <ion-icon slot="start" name="grid-outline"></ion-icon>
+      <ion-label>
+        <h3>Importa categorie</h3>
+        <p>Importa massivamente un elenco di categorie</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <input
+    type="file"
+    id="importFile"
+    (change)="confImportData($event)"
+    accept=".csv"
+    style="display: none;"
+  />
+</ion-content>

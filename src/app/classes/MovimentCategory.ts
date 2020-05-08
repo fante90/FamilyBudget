@@ -12,7 +12,7 @@ export class MovimentCategory extends Entity {
     static entityName = 'movimentCategories';
     static colors = [
         { code: 'tertiary', description: 'Arancione' },
-        { code: 'secodary', description: 'Azzurro' },
+        { code: 'secondary', description: 'Azzurro' },
         { code: 'primary', description: 'Blu' },
         { code: 'medium', description: 'Grigio' },
         { code: 'light', description: 'Grigio chiaro' },

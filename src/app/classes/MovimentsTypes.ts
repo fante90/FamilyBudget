@@ -7,7 +7,7 @@ export class MovimentTypes {
     ];
 
     public static getMovimentTypes(): Array<IMovimentType> {
-        return this.movimentTypes;
+        return Object.assign([], this.movimentTypes);
     }
 
     /**

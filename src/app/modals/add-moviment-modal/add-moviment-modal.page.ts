@@ -13,7 +13,7 @@ import { UIService } from 'src/app/services/ui.service';
 })
 export class AddMovimentModalPage {
 
-  public model: IMoviment = { _id: null, id_category: '', type: null, date: null, note: '', value: null, category: null };
+  public model: IMoviment = { _id: null, id_category: null, type: null, date: null, note: '', value: null, category: null };
   public movimentsTypes: Array<IMovimentType> = [];
   public movimentCategories: Array<IMovimentCategory> = [];
   public submitted = false;
@@ -25,18 +25,40 @@ export class AddMovimentModalPage {
     private uiService: UIService
   ) { }
 
-  ionViewDidEnter() {
-    this.model.type = this.navParams.get('mvType');
-    this.model.date = new Date();
-    this.model.value = 0;
+  async ionViewDidEnter() {
     this.movimentsTypes = MovimentTypes.getMovimentTypes();
-    // Carico le categorie in base al tipo di movimento che si vuole inserire
-    if (this.model.type) {
-      MovimentCategory.getEntries(this.appDBService, false, null, {
-        entity: MovimentCategory.entityName,
-        type: this.model.type
-      }).then(movCategories => this.movimentCategories = movCategories);
+    const ID = this.navParams.get('ID');
+    let tmpModel: IMoviment = Object.assign({}, this.model);
+    if (ID) { // edit
+      try {
+        tmpModel = await Moviment.getEntry(this.appDBService, ID);
+      } catch (error) {
+        this.uiService.presentAlert({
+          header: 'ERRORE',
+          message: 'Categoria non valida o rimossa',
+          buttons: [
+            {
+              text: 'Chiudi',
+              role: 'cancel',
+              cssClass: 'primary'
+            }
+          ]
+        });
+        this.modalCtrl.dismiss();
+      }
+    } else { // new
+      tmpModel.type = this.navParams.get('mvType');
+      tmpModel.date = new Date().toISOString();
+      tmpModel.value = 0;
     }
+    // Carico le categorie in base al tipo di movimento che si vuole inserire/modificare
+    if (tmpModel.type) {
+      this.movimentCategories = await MovimentCategory.getEntries(this.appDBService, false, null, {
+        entity: MovimentCategory.entityName,
+        type: tmpModel.type
+      });
+    }
+    this.model = tmpModel;
   }
 
   /**
@@ -46,6 +68,9 @@ export class AddMovimentModalPage {
     this.submitted = true;
     const moviment = new Moviment(this.appDBService);
     moviment.modelToEntity(this.model);
+    if (!(moviment.date instanceof Date)) {
+      moviment.date = new Date(moviment.date);
+    }
     // Valido il record inserito
     if (!await moviment.valid()) {
       this.submitted = false;

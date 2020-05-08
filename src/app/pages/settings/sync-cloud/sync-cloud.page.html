@@ -1,0 +1,38 @@
+<div>
+  <ion-list mode="ios">
+    <ion-list-header class="ion-padding-bottom">
+      <ion-icon
+        routerLink="/settings"
+        class="ion-float-left ion-padding-end"
+        color="dark"
+        name="chevron-back-outline"
+      ></ion-icon>
+      <ion-label class="ion-no-margin">
+        Sincronizza in Cloud
+      </ion-label>
+    </ion-list-header>
+  </ion-list>
+</div>
+<ion-content>
+  <ion-item lines="none">
+    <ion-text>
+        Attivando la sincronizzazione in cloud puoi sincronizzare il tuo
+        database con un database CouchDB remoto
+    </ion-text>
+  </ion-item>
+  <ion-item>
+    <ion-label>Sincronizza in Cloud</ion-label>
+    <ion-toggle [(ngModel)]="activeSync"></ion-toggle>
+  </ion-item>
+  <ion-item *ngIf="activeSync">
+    <ion-label position="floating">
+      Url Database Remoto
+    </ion-label>
+    <ion-input [disabled]="initialState" required type="url" [(ngModel)]="remoteDbUrl"></ion-input>
+  </ion-item>
+  <div *ngIf="showConfirm()" class="ion-padding">
+    <ion-button color="tertiary" expand="block" (click)="confirmSyncChange()" class="ion-no-margin">
+      Conferma
+    </ion-button>
+  </div>
+</ion-content>

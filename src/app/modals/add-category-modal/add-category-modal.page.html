@@ -14,6 +14,12 @@
     <ion-input type="hidden" [(ngModel)]="model._id" name="id"></ion-input>
     <ion-item>
       <ion-label position="floating">
+        ID
+      </ion-label>
+      <ion-input type="text" disabled="disabled" [value]="getId()"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">
         Descrizione <ion-text color="danger">*</ion-text>
       </ion-label>
       <ion-input required type="text" [(ngModel)]="model.description" name="description"></ion-input>

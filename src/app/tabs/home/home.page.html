@@ -1,8 +1,3 @@
-<ion-toolbar mode="ios">
-  <ion-buttons slot="start">
-    <ion-menu-button mode="ios" autoHide="false"></ion-menu-button>
-  </ion-buttons>
-</ion-toolbar>
 <div class="ion-padding-horizontal dashboard-top-card">
   <ion-card color="light ion-no-margin">
     <ion-card-header class="ion-text-center">
@@ -16,8 +11,8 @@
 </div>
 <div>
   <ion-list lines="full" mode="ios">
-    <ion-list-header>
-        <ion-label class="ion-no-margin">Ultimi Movimenti</ion-label>
+    <ion-list-header class="ion-padding-bottom">
+      <ion-label class="ion-no-margin">Ultimi Movimenti</ion-label>
       <ion-icon
         (click)="openSetListDateFilter()"
         class="ion-float-right ion-padding-horizontal"
@@ -26,27 +21,29 @@
         name="options-outline"
       ></ion-icon>
     </ion-list-header>
-    </ion-list>
+  </ion-list>
 </div>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list lines="full" mode="ios">
-    <ion-item
-      mode="ios"
-      *ngFor="let moviment of moviments; let i = index"
-    >
-      <div slot="start" class="round-icon {{ moviment.category?.color }}-borders">
+    <ion-item mode="ios" *ngFor="let moviment of moviments; let i = index">
+      <div
+        slot="start"
+        class="round-icon {{ moviment.category?.color }}-borders"
+      >
         <ion-icon
+          *ngIf="moviment.category?.icon"
           color="{{ moviment.category?.color }}"
           name="{{ moviment.category?.icon }}"
         ></ion-icon>
       </div>
       <ion-label>
-        <h4>{{ moviment.date | date:'dd/MM/yyyy HH:mm' }}</h4>
-        <small class="ion-text-uppercase">{{ moviment.category?.description }}</small>
-        <p>{{ moviment.note }}</p>
+        <h3>{{ moviment.date | date:'dd/MM/yyyy' }}</h3>
+        <h5 class="ion-text-uppercase">
+          <small>{{ moviment.category?.description }}</small>
+        </h5>
       </ion-label>
       <div slot="end">
         <ion-label>
@@ -59,11 +56,18 @@
       </div>
     </ion-item>
   </ion-list>
-
+</ion-content>
+<ion-footer>
+  <ion-list lines="none" class="ion-no-padding">
+    <ion-item color="light">
+      <ion-label>
+        <h3><strong>TOTALE: {{ getTotal() | number:'1.2-2' }} &euro;</strong></h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="newOperation()" color="tertiary">
+    <ion-fab-button (click)="newOperation()" size="small" color="tertiary">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</ion-content>
-
+</ion-footer>

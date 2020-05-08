@@ -1,0 +1,37 @@
+<div>
+  <ion-list mode="ios">
+    <ion-list-header class="ion-padding-bottom">
+      <ion-icon
+        routerLink="/settings"
+        class="ion-float-left ion-padding-end"
+        color="dark"
+        name="chevron-back-outline"
+      ></ion-icon>
+      <ion-label class="ion-no-margin">
+        Backup
+      </ion-label>
+    </ion-list-header>
+  </ion-list>
+</div>
+<ion-content>
+  <ion-list lines="full" mode="ios">
+    <ion-item (click)="doBackup()">
+      <ion-icon
+        slot="start"
+        name="file-tray-stacked-outline"
+      ></ion-icon>
+      <ion-label>
+        <h3>Effettua Backup</h3>
+        <p>Salva il tuo db su file</p>
+      </ion-label>
+    </ion-item>
+    <ion-item (click)="restoreBackup()">
+      <ion-icon slot="start" name="timer-outline"></ion-icon>
+      <ion-label>
+        <h3>Ripristino Backup</h3>
+        <p>Sovrascrive il db con una copia di backup</p>
+      </ion-label>
+      <input type="file" id="restoreBackupFile" (change)="confRestoreBackup($event)" accept=".bak" style="display: none;" />
+    </ion-item>
+  </ion-list>
+</ion-content>

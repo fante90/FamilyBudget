@@ -11,9 +11,11 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { AddMovimentModalPageModule } from './modals/add-moviment-modal/add-moviment-modal.module';
 import { AddCategoryModalPageModule } from './modals/add-category-modal/add-category-modal.module';
+import { ListMovimentsFiltersModalPageModule } from './tabs/list-moviments/list-moviments-filters-modal/list-moviments-filters-modal.module';
+import { FbHeaderComponent } from './components/fb-header/fb-header.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FbHeaderComponent],
   entryComponents: [],
   imports: [
     BrowserModule, IonicModule.forRoot(), AppRoutingModule,
@@ -21,7 +23,8 @@ import { AddCategoryModalPageModule } from './modals/add-category-modal/add-cate
     FormsModule,
     // Per aprire le modali tramite un service devo includere i moduli delle pagine modali qui
     AddMovimentModalPageModule,
-    AddCategoryModalPageModule
+    AddCategoryModalPageModule,
+    ListMovimentsFiltersModalPageModule
   ],
   providers: [
     StatusBar,

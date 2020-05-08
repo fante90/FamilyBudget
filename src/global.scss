@@ -102,11 +102,15 @@ ion-title {
 }
 
 .round-icon {
-  background-color: var(--ion-color-light);
-  border: 1px solid #ccc;
+  background-color: #FAFAFA;
+  border: 1px solid #FAFAFA;
   border-radius: 16px;
   width: 32px;
   height: 32px;
   text-align: center;
   padding-top: 7px;
+}
+ion-app > ion-router-outlet > *:not(:first-child) {
+    margin-top:44px;
+    max-height: calc(100vh - 44px);
 }

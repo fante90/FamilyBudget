@@ -97,6 +97,10 @@ export class AddCategoryModalPage {
     }
   }
 
+  getId() {
+    return (this.model._id) ? this.model._id.replace(MovimentCategory.entityName + ':', '') : '';
+  }
+
   /**
    * Metodo per chiudere la modale con cui è stata aperta la pagina
    */
