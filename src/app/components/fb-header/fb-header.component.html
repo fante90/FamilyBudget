@@ -4,9 +4,12 @@
   </ion-buttons>
   <ion-buttons slot="end">
     <ion-button routerLink="/settings"><ion-icon name="settings-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="syncStatus == 'no-sync'" routerLink="/settings/sync-cloud"><ion-icon color="medium" name="cloudy-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="syncStatus == 'sync-error'" routerLink="/settings/sync-cloud"><ion-icon color="danger" name="cloud-offline-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="syncStatus == 'syncing'" routerLink="/settings/sync-cloud"><ion-icon color="primary" name="cloud-upload-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="syncStatus == 'sync-ok'" routerLink="/settings/sync-cloud"><ion-icon color="success" name="cloud-done-outline"></ion-icon></ion-button>
+    <ion-button routerLink="/settings/sync-cloud">
+      <ion-icon *ngIf="syncStatus == 'no-sync'" color="medium" name="cloudy-outline"></ion-icon>
+      <ion-icon *ngIf="syncStatus == 'sync-error'" color="danger" name="cloud-offline-outline"></ion-icon>
+      <ion-icon *ngIf="syncStatus == 'sync-in'" color="primary" name="cloud-download-outline"></ion-icon>
+      <ion-icon *ngIf="syncStatus == 'sync-out'" color="primary" name="cloud-upload-outline"></ion-icon>
+      <ion-icon *ngIf="syncStatus == 'sync-ok'" color="primary" name="cloud-done-outline"></ion-icon>
+    </ion-button>
   </ion-buttons>
 </ion-toolbar>

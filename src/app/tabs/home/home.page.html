@@ -1,5 +1,5 @@
 <div class="ion-padding-horizontal dashboard-top-card">
-  <ion-card color="light ion-no-margin">
+  <ion-card color="light" class="ion-no-margin">
     <ion-card-header class="ion-text-center">
       <ion-card-subtitle><strong>BILANCIO ANNUALE</strong></ion-card-subtitle>
       <ion-card-title>
@@ -9,65 +9,87 @@
     </ion-card-header>
   </ion-card>
 </div>
-<div>
-  <ion-list lines="full" mode="ios">
-    <ion-list-header class="ion-padding-bottom">
-      <ion-label class="ion-no-margin">Ultimi Movimenti</ion-label>
-      <ion-icon
-        (click)="openSetListDateFilter()"
-        class="ion-float-right ion-padding-horizontal"
-        color="dark"
-        size="large"
-        name="options-outline"
-      ></ion-icon>
-    </ion-list-header>
-  </ion-list>
-</div>
-<ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
-  <ion-list lines="full" mode="ios">
-    <ion-item mode="ios" *ngFor="let moviment of moviments; let i = index">
-      <div
-        slot="start"
-        class="round-icon {{ moviment.category?.color }}-borders"
-      >
-        <ion-icon
-          *ngIf="moviment.category?.icon"
-          color="{{ moviment.category?.color }}"
-          name="{{ moviment.category?.icon }}"
-        ></ion-icon>
-      </div>
-      <ion-label>
-        <h3>{{ moviment.date | date:'dd/MM/yyyy' }}</h3>
-        <h5 class="ion-text-uppercase">
-          <small>{{ moviment.category?.description }}</small>
-        </h5>
-      </ion-label>
-      <div slot="end">
-        <ion-label>
-          <p>
-            <strong class="ion-text-right">
-              {{ moviment.value | number:'1.2-2' }} &euro;
-            </strong>
-          </p>
-        </ion-label>
-      </div>
-    </ion-item>
-  </ion-list>
+<ion-content color="light">
+  <ion-slides pager="true" [options]="chartSliderOpts" (ionSlideNextEnd)="slideNext()" (ionSlidePrevEnd)="slidePrev()">
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title><strong>Uscite</strong></ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="card-chart">
+          <canvas #outChart></canvas>
+          <div class="total">{{ totalOut }} &euro;</div>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title><strong>Entrate</strong></ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="card-chart">
+          <canvas #inChart></canvas>
+          <div class="total">{{ totalIn }} &euro;</div>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+  <ion-slides #listSlider pager="false" [options]="listSliderOpts">
+    <ion-slide>
+      <ion-card style="width:100%">
+        <ion-card-content class="ion-no-margin ion-no-padding" >
+          <ion-item lines="full" *ngFor="let category of categoriesTotalOut">
+            <div
+            slot="start"
+            class="round-icon"
+            [ngStyle]="{'background-color': category.color}"
+          >
+            <ion-icon
+              name="{{ category.icon }}"
+            ></ion-icon>
+          </div>
+          <ion-label>
+              <strong><small>{{ category.description | uppercase }}</small></strong>
+              <div class="perc-bar-content">
+                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar">
+                  <div [ngStyle]="{'color': 'var(--ion-color-medium)'}" class="perc">{{ category.perc | number:'1.0-0'}} %</div>
+                </div>
+              </div>
+              <div class="ion-text-end">
+                <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>
+              </div>
+          </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+    <ion-slide>
+      <ion-card style="width:100%">
+        <ion-card-content class="ion-no-margin ion-no-padding" >
+          <ion-item lines="full" *ngFor="let category of categoriesTotalIn">
+            <div
+            slot="start"
+            class="round-icon"
+            [ngStyle]="{'background-color': category.color}"
+          >
+            <ion-icon
+              name="{{ category.icon }}"
+            ></ion-icon>
+          </div>
+          <ion-label>
+              <strong><small>{{ category.description | uppercase }}</small></strong>
+              <div class="perc-bar-content">
+                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar">
+                  <div [ngStyle]="{'color': 'var(--ion-color-medium)'}" class="perc">{{ category.perc | number:'1.0-0'}} %</div>
+                </div>
+              </div>
+              <div class="ion-text-end">
+                <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>
+              </div>
+          </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
-<ion-footer>
-  <ion-list lines="none" class="ion-no-padding">
-    <ion-item color="light">
-      <ion-label>
-        <h3><strong>TOTALE: {{ getTotal() | number:'1.2-2' }} &euro;</strong></h3>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="newOperation()" size="small" color="tertiary">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-footer>

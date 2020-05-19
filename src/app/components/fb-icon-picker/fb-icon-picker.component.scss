@@ -1,0 +1,35 @@
+.icons-grid {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 220px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  padding: 5px;
+}
+
+.icon-wrapper {
+  margin: 0 4px;
+  padding: 5px;
+}
+
+.icon-btn {
+  border-radius:50%;
+  height: 30px;
+  width: 30px;
+  position: relative;
+  border: 2px solid #FFFFFF;
+  text-align:center;
+  padding-top:3px;
+
+  &.selected {
+    ion-icon {
+      color: var(--ion-color-primary) !important;
+    }
+  }
+
+  ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-dark);
+  }
+}

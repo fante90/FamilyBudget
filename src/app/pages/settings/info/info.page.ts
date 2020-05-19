@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { version, author } from '../../../../../package.json';
 
 @Component({
   selector: 'app-info',
@@ -6,7 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./info.page.scss'],
 })
 export class InfoPage {
+  appVersion: string;
+  appAuthor: string;
 
-  constructor() { }
+  constructor() {
+    this.appVersion = version;
+    this.appAuthor = author;
+  }
 
 }

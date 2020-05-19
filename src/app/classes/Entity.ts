@@ -55,7 +55,6 @@ export abstract class Entity {
      */
     public async delete(): Promise<boolean> {
         try {
-            // TODO : Valutare se l'entry è usata prima di cancellarla
             await this.appDBService.deleteEntry(this._id);
         } catch (error) {
             this.errors.push(error);

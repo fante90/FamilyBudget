@@ -4,6 +4,7 @@ import { AddCategoryModalPage } from '../../modals/add-category-modal/add-catego
 import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 import { MovimentTypes } from 'src/app/classes/MovimentsTypes';
 import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
+import { Moviment } from 'src/app/classes/Moviment';
 
 @Component({
   selector: 'app-list-categories',
@@ -62,6 +63,26 @@ export class ListCategoriesPage {
     const movCategory = new MovimentCategory(this.appDBService);
     let result: boolean = await movCategory.findEntry(category._id);
     if (result) {
+      // verifico se la categoria è utilizzata
+      const selector = {
+        entity: Moviment.entityName,
+        id_category: movCategory._id
+      };
+      const moviments: IMoviment[] = await Moviment.getEntries(this.appDBService, false, 1, selector);
+      if (moviments && moviments.length > 0) {
+        this.uiService.presentAlert({
+          header: 'ERRORE',
+          message: 'La categoria è collegata a dei movimenti e non può essere cancellata',
+          buttons: [
+            {
+              text: 'Chiudi',
+              role: 'cancel',
+              cssClass: 'primary'
+            }
+          ]
+        });
+        return;
+      }
       result = await movCategory.delete();
     }
     if (result === false) { // Errore

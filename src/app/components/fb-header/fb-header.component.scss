@@ -1,0 +1,6 @@
+// Rimuove l'ombra che fa da bordo inferiore all'header
+ion-header {
+  &.header-md:after {
+    background: none;
+  }
+}

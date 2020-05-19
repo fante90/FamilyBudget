@@ -4,14 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
+import { FbColorPickerComponent } from './fb-color-picker.component';
 
-import { AddCategoryModalPage } from './add-category-modal.page';
 
 
 const routes: Routes = [
   {
     path: '',
-    component: AddCategoryModalPage
+    component: FbColorPickerComponent
   }
 ];
 
@@ -22,6 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AddCategoryModalPage]
+  declarations: [FbColorPickerComponent]
 })
-export class AddCategoryModalPageModule {}
+export class FbColorPickerModule {}

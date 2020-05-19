@@ -98,10 +98,11 @@ export class Moviment extends Entity {
 
         let entries: Array<IMoviment> = [];
         entries = await appDBService.getEntries(this.entityName, desc, limit, customSelector);
-        entries.forEach(async entry => {
+        for (const entry of entries) {
             // Valorizzo anche i dati della categoria di appartenenza
             entry.category = await MovimentCategory.getEntry(appDBService, entry.id_category);
-        });
+        }
+
         return entries;
     }
 }

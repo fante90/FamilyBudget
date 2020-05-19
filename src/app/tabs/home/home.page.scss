@@ -8,3 +8,45 @@
   transform:translateY(-30%);
   position:relative;
 }
+
+.card-chart {
+  position:relative;
+
+  .total {
+    position:absolute;
+    font-size:18px;
+    font-weight:bold;
+    color: var(--ion-color-dark);
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+  }
+}
+
+.perc-bar-content {
+  position:relative;
+  width:100%;
+  height:5px;
+  border-radius: 3px;
+  background-color: var(--ion-color-light);
+
+  .perc-bar {
+    position:absolute;
+    left:0px;
+    height:5px;
+    border-radius: 3px;
+
+    .perc {
+      position: absolute;
+      width:30px;
+      height:20px;
+      background-color:white;
+      font-size:9px;
+      font-weight:bold;
+      line-height:20px;
+      text-align:center;
+      right:-7px;
+      top:-7px;
+    }
+  }
+}

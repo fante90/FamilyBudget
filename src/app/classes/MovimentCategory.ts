@@ -10,19 +10,6 @@ export class MovimentCategory extends Entity {
     protected fieldProperties = ['_id', 'description', 'type', 'color', 'icon'];
 
     static entityName = 'movimentCategories';
-    static colors = [
-        { code: 'tertiary', description: 'Arancione' },
-        { code: 'secondary', description: 'Azzurro' },
-        { code: 'primary', description: 'Blu' },
-        { code: 'medium', description: 'Grigio' },
-        { code: 'light', description: 'Grigio chiaro' },
-        { code: 'dark', description: 'Nero' },
-        { code: 'success', description: 'Verde' }
-    ];
-
-    public static getColors() {
-        return this.colors;
-    }
 
     /**
      * Metodo per validare la categoria prima di un salvataggio su db
@@ -47,14 +34,8 @@ export class MovimentCategory extends Entity {
         if (!isValidType) {
             this.errors.push('Tipo di movimento - non valido');
         }
-        // Validazione del colore
-        let isValidColor = false;
-        MovimentCategory.getColors().forEach(color => {
-            if (this.color === color.code) {
-                isValidColor = true;
-            }
-        });
-        if (!isValidColor) {
+        // Validazione del colore (deve iniziare con # e avere 7 caratteri => #XXXXXX)
+        if (!(this.color.indexOf('#') === 0 && this.color.length === 7)) {
             this.errors.push('Colore - non valido');
         }
         return (this.errors.length === 0);

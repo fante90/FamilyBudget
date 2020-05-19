@@ -22,42 +22,50 @@
       <ion-label position="floating">
         Descrizione <ion-text color="danger">*</ion-text>
       </ion-label>
-      <ion-input required type="text" [(ngModel)]="model.description" name="description"></ion-input>
+      <ion-input
+        required
+        type="text"
+        [(ngModel)]="model.description"
+        name="description"
+      ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="floating">
         Associa a <ion-text color="danger">*</ion-text>
       </ion-label>
       <ion-select required [(ngModel)]="model.type" name="type">
-        <ion-select-option 
-          *ngFor="let movType of movimentsTypes; let i = index" 
+        <ion-select-option
+          *ngFor="let movType of movimentsTypes; let i = index"
           value="{{ movType.code }}"
         >
           {{ movType.description }}
         </ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item>
-      <ion-label position="floating">
+    <ion-item (click)="openColorPicker()" type="button">
+      <ion-label>
         Colore <ion-text color="danger">*</ion-text>
       </ion-label>
-      <ion-select required [(ngModel)]="model.color" name="color">
-        <ion-select-option 
-          *ngFor="let color of colors; let i = index" 
-          value="{{ color.code }}"
-        >
-          {{ color.description }}
-        </ion-select-option>
-      </ion-select>
+      <ion-input required type="hidden" [(ngModel)]="model.color" name="color"></ion-input>
+      <div class="color-btn" [style.background-color]="model.color" slot="end"></div>
     </ion-item>
-    <ion-item>
-      <ion-label position="floating">
+    <ion-item (click)="openIconPicker()" type="button">
+      <ion-label>
         Icona <ion-text color="danger">*</ion-text>
       </ion-label>
-      <ion-input type="text" [(ngModel)]="model.icon" name="icon"></ion-input>
+      <ion-input required type="hidden" [(ngModel)]="model.icon" name="icon"></ion-input>
+      <div class="icon-btn" slot="end">
+        <ion-icon color="dark" [name]="model.icon"></ion-icon>
+      </div>
     </ion-item>
     <div class="ion-padding">
-      <ion-button color="tertiary" expand="block" type="submit" [disabled]="!formCtrl.form.valid || submitted" class="ion-no-margin">
+      <ion-button
+        color="tertiary"
+        expand="block"
+        type="submit"
+        [disabled]="!formCtrl.form.valid || submitted"
+        class="ion-no-margin"
+      >
         Salva
       </ion-button>
     </div>

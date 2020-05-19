@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-fb-header',
@@ -9,7 +10,7 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
 export class FbHeaderComponent {
   syncStatus = 'no-sync';
   private prevSyncStatus = '';
-  constructor(private appDBService: FamilyBudgetDBService) {
+  constructor(private appDBService: FamilyBudgetDBService, private changeDetector: ChangeDetectorRef) {
     this.remoteSync();
   }
 
@@ -36,11 +37,19 @@ export class FbHeaderComponent {
             }
           }
           if (msg.state === 'active') {
-            this.syncStatus = 'syncing';
+            this.syncStatus = 'sync-out';
+          }
+          // in base al tipo di operazione mostro un'icona che identifica se è in uscita verso il cloud o in entrata
+          if (msg.state === 'change') {
+            if (msg.data.direction) {
+              this.syncStatus = (msg.data.direction === 'push') ? 'sync-out' : 'sync-in';
+            }
           }
           // in caso di db già sincronizzato viene lanciato lo stato paused due volte,
           // per non mostrare erroneamente poi che si è offline sfrutto uno stato provvisorio
           this.prevSyncStatus = (msg.state === 'paused' && this.prevSyncStatus === '') ? 'first-paused' : msg.state;
+          // forzo Angular a rivalutare i cambiamenti nell'interfaccia così da aggiornare correttamente l'icona di sync
+          this.changeDetector.detectChanges();
         }
       }, (error) => {
         // il db remoto non è configurato o si è verificata un'eccezione
@@ -51,9 +60,10 @@ export class FbHeaderComponent {
         }, syncRetryTime);
       });
     } else {
+      // in questo caso il db non è ancora stato inizializzato, riprovo dopo pochi secondi
       setTimeout(() => {
         this.remoteSync();
-      }, syncRetryTime);
+      }, 5);
     }
   }
 }

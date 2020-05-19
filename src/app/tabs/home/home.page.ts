@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Moviment } from '../../classes/Moviment';
 import { UIService } from '../../services/ui.service';
-import { AddMovimentModalPage } from '../../modals/add-moviment-modal/add-moviment-modal.page';
 import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
+import { Chart } from 'chart.js';
+import { IonSlides } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,91 +11,40 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
   styleUrls: ['home.page.scss']
 })
 export class HomePage {
+  @ViewChild('outChart', { static: false }) outChart;
+  @ViewChild('inChart', { static: false }) inChart;
+  @ViewChild('listSlider', { static: false }) listSlider: IonSlides;
 
-  public moviments: Array<IMoviment>;
-  private listDateFilter: any = null;
-  private daysDateFilter = 7;
   public yearlyBalance = '';
+  public totalOut = '';
+  public totalIn = '';
+  public categoriesTotalOut = [];
+  public categoriesTotalIn = [];
+
+  chartSliderOpts = {
+    initialSlide: 0,
+    speed: 400
+  };
+  listSliderOpts = {
+    initialSlide: 0,
+    speed: 400,
+    allowTouchMove: false
+  }
+  private outChartRef = null;
+  private inChartRef = null;
 
   constructor(
     private appDBService: FamilyBudgetDBService,
     private uiService: UIService) {
-    // Imposto come filtro di date per la lista gli ultimi 30 giorni
-    this.setListDateFilter(7);
   }
 
   ionViewDidEnter() {
-    this.refreshList();
     this.calcYearlyBalance();
-  }
-
-  public setListDateFilter(days: number) {
-    this.daysDateFilter = days;
-    const endDateF = new Date();
-    const tmpMilliseconds = endDateF.getTime();
-    const startDateF = new Date(tmpMilliseconds - (1000 * 60 * 60 * 24 * days));
-    this.listDateFilter = {
-      entity: Moviment.entityName,
-      date: {
-        $gte: startDateF,
-        $lte: endDateF
-      }
-    };
-  }
-
-  /**
-   * Metodo utilizzato dal action button in basso a destra
-   */
-  public newOperation() {
-    this.uiService.presentActionSheet({
-      header: 'Seleziona il tipo di movimento:',
-      buttons: [
-        {
-          text: 'Registra entrata',
-          icon: 'arrow-down-outline',
-          handler: async () => {
-            const modal = await this.uiService.presentModal(AddMovimentModalPage, { mvType: 'P' });
-            modal.onDidDismiss().then(() => {
-              this.refreshList();
-            });
-          }
-        }, {
-          text: 'Registra uscita',
-          icon: 'arrow-up-outline',
-          handler: async () => {
-            const modal = await this.uiService.presentModal(AddMovimentModalPage, { mvType: 'M' });
-            modal.onDidDismiss().then(() => {
-              this.refreshList();
-            });
-          }
-        }, {
-          text: 'Registra investimento',
-          icon: 'cash-outline',
-          handler: async () => {
-            const modal = await this.uiService.presentModal(AddMovimentModalPage, { mvType: 'I' });
-            modal.onDidDismiss().then(() => {
-              this.refreshList();
-            });
-          }
-        }
-      ]
-    });
-  }
-
-  /**
-   * Metodo che inizializza/aggiorna l'elenco degli ultimi movimenti
-   */
-  public refreshList(event = null) {
-    Moviment.getEntries(this.appDBService, true, null, this.listDateFilter).then(result => {
-      this.moviments = result;
-      if (event) {
-        event.target.complete();
-      }
-    });
   }
 
   /**
    * Metodo che calcolo il bilancio annuale in base alla somma dei movimenti dal 1 gennaio a oggi
+   * e genera i due grafici di entrate e uscite
    */
   private calcYearlyBalance() {
     this.yearlyBalance = '';
@@ -105,76 +55,109 @@ export class HomePage {
         $lte: new Date() // ora + un minuto per essere certo di prendere tutti i movimenti
       }
     };
-    Moviment.getEntries(this.appDBService, false, null, selector).then(result => {
-      let sum = 0;
-      result.forEach(moviment => {
-        sum += (moviment.value * ((moviment.type === 'P') ? 1 : -1));
-      });
-      this.yearlyBalance = ((sum >= 0) ? '+' : '-') + sum.toFixed(2);
-    });
-  }
-
-  /**
-   * Metodo che restituisce la somma dei movimenti
-   */
-  getTotal() {
-    let total = 0;
-    if (this.moviments) {
-      this.moviments.forEach(mov => {
-        total += (mov.value * (mov.type === 'P' ? 1 : -1));
-      });
-    }
-
-    return total;
-  }
-
-  /**
-   * Medoto che apre la modale di selezione del filtro di data della lista
-   */
-  public openSetListDateFilter() {
-    this.uiService.presentAlert({
-      header: 'Seleziona il filtro di data',
-      inputs: [
+    const processedCatsOut = [];
+    const processedCatsIn = [];
+    const chartDataOut = {
+      labels: [],
+      datasets: [
         {
-          name: 'days',
-          type: 'radio',
-          label: 'Ultimi 7 giorni',
-          value: 7,
-          checked: (this.daysDateFilter === 7)
-        },
-        {
-          name: 'days',
-          type: 'radio',
-          label: 'Ultimi 30 giorni',
-          value: 30,
-          checked: (this.daysDateFilter === 30)
-        },
-        {
-          name: 'days',
-          type: 'radio',
-          label: 'Ultimi 90 giorni',
-          value: 90,
-          checked: (this.daysDateFilter === 90)
-        },
-      ],
-      buttons: [
-        {
-          text: 'Annulla',
-          role: 'cancel',
-          cssClass: 'medium'
-        },
-        {
-          text: 'Conferma',
-          handler: (data) => {
-            if (data) {
-              this.setListDateFilter(data);
-              this.refreshList();
-            } else {
-              return false;
-            }
-          }
+          data: [],
+          backgroundColor: []
         }
       ]
+    };
+    const chartDataIn = {
+      labels: [],
+      datasets: [
+        {
+          data: [],
+          backgroundColor: []
+        }
+      ]
+    };
+    Moviment.getEntries(this.appDBService, false, null, selector).then(result => {
+      let sum = 0;
+      let sumOut = 0;
+      let sumIn = 0;
+      this.categoriesTotalIn = [];
+      this.categoriesTotalOut = [];
+      result.forEach(moviment => {
+        sum += (moviment.value * ((moviment.type === 'P') ? 1 : -1));
+        // valuto i dati per i grafici di entrate e uscite
+        if (moviment.type === 'P') { // grafico entrate
+          sumIn += moviment.value;
+          const catIndex = processedCatsIn.indexOf(moviment.id_category);
+          if (catIndex >= 0) { // categoria già presente, sommo
+            chartDataIn.datasets[0].data[catIndex] += moviment.value;
+            this.categoriesTotalIn[catIndex].value += moviment.value;
+          } else { // categoria non ancora presente, creo
+            processedCatsIn.push(moviment.id_category);
+            chartDataIn.labels.push(moviment.category.description);
+            chartDataIn.datasets[0].data.push(moviment.value);
+            chartDataIn.datasets[0].backgroundColor.push(moviment.category.color);
+            const catTotal = Object.assign({ value: moviment.value }, moviment.category);
+            this.categoriesTotalIn.push(catTotal);
+          }
+        } else { // grafico uscite
+          sumOut += moviment.value;
+          const catIndex = processedCatsOut.indexOf(moviment.id_category);
+          if (catIndex >= 0) { // categoria già presente, sommo
+            chartDataOut.datasets[0].data[catIndex] += moviment.value;
+            this.categoriesTotalOut[catIndex].value += moviment.value;
+          } else { // categoria non ancora presente, creo
+            processedCatsOut.push(moviment.id_category);
+            chartDataOut.labels.push(moviment.category.description);
+            chartDataOut.datasets[0].data.push(moviment.value);
+            chartDataOut.datasets[0].backgroundColor.push(moviment.category.color);
+            const catTotal = Object.assign({ value: moviment.value }, moviment.category);
+            this.categoriesTotalOut.push(catTotal);
+          }
+        }
+      });
+      this.yearlyBalance = ((sum >= 0) ? '+' : '') + sum.toFixed(2);
+      this.totalIn = sumIn.toFixed(2);
+      this.totalOut = '-' + sumOut.toFixed(2);
+
+      // per ogni categoria aggiungo il valore percentuale in cui incide sul totale
+      for (const [i, cat] of this.categoriesTotalOut.entries()) {
+        this.categoriesTotalOut[i].perc = cat.value / sumOut * 100;
+      }
+      for (const [i, cat] of this.categoriesTotalIn.entries()) {
+        this.categoriesTotalIn[i].perc = cat.value / sumIn * 100;
+      }
+      // ordino le categorie da quella che incide di più a quella che incide di meno
+      this.categoriesTotalOut.sort((a, b) => {
+        return ( a.value > b.value) ? -1 : 1;
+      });
+      this.categoriesTotalIn.sort((a, b) => {
+        return ( a.value > b.value) ? -1 : 1;
+      });
+      this.outChartRef = new Chart(this.outChart.nativeElement, {
+        type: 'doughnut',
+        data: chartDataOut,
+        options: {
+          circumference: Math.PI,
+          rotation: -Math.PI,
+          legend: { display: false }
+        }
+      });
+      this.inChartRef = new Chart(this.inChart.nativeElement, {
+        type: 'doughnut',
+        data: chartDataIn,
+        options: {
+          circumference: Math.PI,
+          rotation: -Math.PI,
+          legend: { display: false }
+        }
+      });
     });
+  }
+
+  slideNext() {
+    this.listSlider.slideNext();
+  }
+
+  slidePrev() {
+    this.listSlider.slidePrev();
   }
 }

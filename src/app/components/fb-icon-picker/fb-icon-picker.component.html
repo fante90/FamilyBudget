@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="transparent">
+    <ion-title>Seleziona un'icona</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="icons-grid">
+    <div class="icon-wrapper" *ngFor="let icon of icons">
+      <div
+        [class]="icon == selectedIcon ? 'icon-btn selected' : 'icon-btn'"
+        (click)="setSelectedIcon(icon)"
+      >
+        <ion-icon [name]="icon"></ion-icon>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="medium" fill="clear">
+        Annulla
+      </ion-button>
+      <ion-button (click)="confirm()" fill="clear">Conferma</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

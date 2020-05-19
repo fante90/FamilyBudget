@@ -25,92 +25,36 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-.primary {
-  color: var(--ion-color-primary) !important;
-}
-.primary-bg {
-  background-color: var(--ion-color-primary) !important;
-}
-.primary-borders {
-  border-color: var(--ion-color-primary) !important;
-}
-.secondary {
-  color: var(--ion-color-secondary) !important;
-}
-.secondary-bg {
-  background-color: var(--ion-color-secondary) !important;
-}
-.secondary-borders {
-  border-color: var(--ion-color-secondary) !important;
-}
-.tertiary {
-  color: var(--ion-color-tertiary) !important;
-}
-.tertiary-bg {
-  background-color: var(--ion-color-tertiary) !important;
-}
-.tertiary-borders {
-  border-color: var(--ion-color-tertiary) !important;
-}
-.success {
-  color: var(--ion-color-success) !important;
-}
-.success-bg {
-  background-color: var(--ion-color-success) !important;
-}
-.success-borders {
-  border-color: var(--ion-color-success) !important;
-}
-.dark {
-  color: var(--ion-color-dark) !important;
-}
-.dark-bg {
-  background-color: var(--ion-color-dark) !important;
-}
-.dark-borders {
-  border-color: var(--ion-color-dark) !important;
-}
-.medium {
-  color: var(--ion-color-medium) !important;
-}
-.medium-bg {
-  background-color: var(--ion-color-medium) !important;
-}
-.medium-borders {
-  border-color: var(--ion-color-medium) !important;
-}
-.light {
-  color: var(--ion-color-light) !important;
-}
-.light-bg {
-  background-color: var(--ion-color-light) !important;
-}
-.light-borders {
-  border-color: var(--ion-color-light) !important;
-}
-
-// Rimuove l'ombra che fa da bordo inferiore all'header
-ion-header {
-  &.header-md:after {
-    background: none;
-  }
-}
-
 ion-title {
   font-size: 14px;
   text-transform: uppercase;
 }
 
 .round-icon {
-  background-color: #FAFAFA;
-  border: 1px solid #FAFAFA;
-  border-radius: 16px;
-  width: 32px;
-  height: 32px;
+  border-radius: 18px;
+  width: 36px;
+  height: 36px;
   text-align: center;
-  padding-top: 7px;
+  padding-top: 9px;
+  position:relative;
+
+  ion-icon {
+    color: white;
+    font-size:18px;
+  }
+
+  &::after {
+    position:absolute;
+    border-radius:16px;
+    width: 30px;
+    height: 30px;
+    border:1px solid white;
+    top:2px;
+    left:2px;
+    content:'';
+  }
 }
 ion-app > ion-router-outlet > *:not(:first-child) {
-    margin-top:44px;
-    max-height: calc(100vh - 44px);
+  margin-top: 44px;
+  max-height: calc(100vh - 44px);
 }

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActionSheetController, AlertController, ModalController, ToastController } from '@ionic/angular';
+import {
+  ActionSheetController, AlertController, ModalController,
+  ToastController, PopoverController, LoadingController
+} from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,9 @@ export class UIService {
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private popoverCtrl: PopoverController,
+    private loadingCtrl: LoadingController
   ) { }
 
 
@@ -66,5 +71,29 @@ export class UIService {
     await modal.present();
 
     return modal;
+  }
+
+  /**
+   * Metodo per aprire un componente in un popover
+   * @param component componente da inserire nel popover
+   */
+  public async presentPopover(component: any, componentParams: { [key: string]: any; }) {
+    const popover = await this.popoverCtrl.create({
+      component,
+      componentProps: componentParams
+    });
+    await popover.present();
+
+    return popover;
+  }
+
+  /**
+   * Metodo per visualizzare un messaggio di caricamento in corso
+   */
+  public async presentLoading(loadingParams) {
+    const loading = await this.loadingCtrl.create(loadingParams);
+    loading.present();
+
+    return loading;
   }
 }

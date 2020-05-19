@@ -24,11 +24,11 @@
       <ion-item>
         <div
           slot="start"
-          class="round-icon {{ moviment.category?.color }}-borders"
+          class="round-icon"
+          [ngStyle]="{'background-color': (moviment.category) ? moviment.category.color : ''}"
         >
           <ion-icon
             *ngIf="moviment.category?.icon"
-            color="{{ moviment.category?.color }}"
             name="{{ moviment.category?.icon }}"
           ></ion-icon>
         </div>

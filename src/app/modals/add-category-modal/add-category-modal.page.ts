@@ -4,6 +4,8 @@ import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 import { MovimentTypes } from 'src/app/classes/MovimentsTypes';
 import { UIService } from 'src/app/services/ui.service';
 import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
+import { FbColorPickerComponent } from 'src/app/components/fb-color-picker/fb-color-picker.component';
+import { FbIconPickerComponent } from 'src/app/components/fb-icon-picker/fb-icon-picker.component';
 
 @Component({
   selector: 'app-add-category-modal',
@@ -14,7 +16,6 @@ export class AddCategoryModalPage {
 
   public model: IMovimentCategory = { _id: null, description: '', type: '', color: '', icon: '' };
   public movimentsTypes: Array<IMovimentType> = [];
-  public colors = [];
   public submitted = false;
 
   constructor(
@@ -27,7 +28,6 @@ export class AddCategoryModalPage {
   async ionViewDidEnter() {
     const ID = this.navParams.get('ID');
     this.movimentsTypes = MovimentTypes.getMovimentTypes();
-    this.colors = MovimentCategory.getColors();
     // Se è arrivato un ID sono in edit, devo fare la retrieve del record da db
     if (ID) {
       try {
@@ -47,6 +47,30 @@ export class AddCategoryModalPage {
         this.modalCtrl.dismiss();
       }
     }
+  }
+
+  /**
+   * Metodo che apre il popover contenente il ColorPicker
+   */
+  async openColorPicker() {
+    const popover = await this.uiService.presentPopover(FbColorPickerComponent, {});
+    popover.onDidDismiss().then((rtn: any) => {
+      if (rtn && rtn.data) {
+        this.model.color = rtn.data;
+      }
+    });
+  }
+
+  /**
+   * Metodo che apre il popover contenente l'IconPicker
+   */
+  async openIconPicker() {
+    const popover = await this.uiService.presentPopover(FbIconPickerComponent, {});
+    popover.onDidDismiss().then((rtn: any) => {
+      if (rtn && rtn.data) {
+        this.model.icon = rtn.data;
+      }
+    });
   }
 
   /**

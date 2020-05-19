@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="transparent">
+    <ion-title>Seleziona un colore</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="colors-grid">
+    <div class="color-wrapper" *ngFor="let color of colors">
+      <div
+        [class]="color == selectedColor ? 'color-btn selected' : 'color-btn'"
+        [style.background-color]="color"
+        (click)="setSelectedColor(color)"
+      ></div>
+    </div>
+  </div>
+  <ion-range
+    [ngStyle]="{ visibility: selectedColor ? 'visible' : 'hidden' }"
+    #colorRange
+    class="color-range"
+    [value]="colorRangeConfig.value"
+    [min]="colorRangeConfig.min"
+    [max]="colorRangeConfig.max"
+    (ionChange)="onColorRangeChange($event)"
+  >
+  </ion-range>
+  <div [style.background-color]="rtnColor" class="selected-color"></div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()" color="medium" fill="clear"
+        >Annulla</ion-button
+      >
+      <ion-button (click)="confirm()" fill="clear">Conferma</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

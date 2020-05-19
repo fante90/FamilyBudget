@@ -12,7 +12,12 @@ import { FormsModule } from '@angular/forms';
 import { AddMovimentModalPageModule } from './modals/add-moviment-modal/add-moviment-modal.module';
 import { AddCategoryModalPageModule } from './modals/add-category-modal/add-category-modal.module';
 import { ListMovimentsFiltersModalPageModule } from './tabs/list-moviments/list-moviments-filters-modal/list-moviments-filters-modal.module';
+import { FbColorPickerModule } from './components/fb-color-picker/fb-color-picker.module';
+import { FbIconPickerModule } from './components/fb-icon-picker/fb-icon-picker.module';
 import { FbHeaderComponent } from './components/fb-header/fb-header.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [AppComponent, FbHeaderComponent],
@@ -24,7 +29,10 @@ import { FbHeaderComponent } from './components/fb-header/fb-header.component';
     // Per aprire le modali tramite un service devo includere i moduli delle pagine modali qui
     AddMovimentModalPageModule,
     AddCategoryModalPageModule,
-    ListMovimentsFiltersModalPageModule
+    ListMovimentsFiltersModalPageModule,
+    FbColorPickerModule,
+    FbIconPickerModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,

@@ -1,0 +1,50 @@
+.colors-grid {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 170px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  padding: 5px;
+  margin-top:5px;
+}
+
+.color-wrapper {
+  margin: 0 4px;
+  padding: 5px;
+}
+
+.color-btn {
+  background-color: #f2f0f0;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  position: relative;
+
+  &.selected::after {
+    position: absolute;
+    top: 4px;
+    bottom: 0;
+    left: 10px;
+    right: 0;
+    content: "";
+    transform: rotate(45deg);
+    width: 8px;
+    height: 15px;
+    border-bottom: 2px solid white;
+    border-right: 2px solid white;
+  }
+}
+
+.color-range {
+  --bar-background-active: none;
+  --knob-background: #888;
+  --bar-border-radius: 5px;
+  --bar-height: 5px;
+}
+
+.selected-color {
+  height: 20px;
+  width: 100%;
+}
