@@ -51,9 +51,8 @@
           <ion-label>
               <strong><small>{{ category.description | uppercase }}</small></strong>
               <div class="perc-bar-content">
-                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar">
-                  <div [ngStyle]="{'color': 'var(--ion-color-medium)'}" class="perc">{{ category.perc | number:'1.0-0'}} %</div>
-                </div>
+                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar"></div>
+                <div class="perc">{{ category.perc | number:'1.1-1'}} %</div>
               </div>
               <div class="ion-text-end">
                 <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>
@@ -79,9 +78,8 @@
           <ion-label>
               <strong><small>{{ category.description | uppercase }}</small></strong>
               <div class="perc-bar-content">
-                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar">
-                  <div [ngStyle]="{'color': 'var(--ion-color-medium)'}" class="perc">{{ category.perc | number:'1.0-0'}} %</div>
-                </div>
+                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar"></div>
+                <div class="perc">{{ category.perc | number:'1.1-1'}} %</div>
               </div>
               <div class="ion-text-end">
                 <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>

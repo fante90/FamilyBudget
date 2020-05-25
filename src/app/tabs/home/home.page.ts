@@ -127,10 +127,10 @@ export class HomePage {
       }
       // ordino le categorie da quella che incide di più a quella che incide di meno
       this.categoriesTotalOut.sort((a, b) => {
-        return ( a.value > b.value) ? -1 : 1;
+        return (a.value > b.value) ? -1 : 1;
       });
       this.categoriesTotalIn.sort((a, b) => {
-        return ( a.value > b.value) ? -1 : 1;
+        return (a.value > b.value) ? -1 : 1;
       });
       this.outChartRef = new Chart(this.outChart.nativeElement, {
         type: 'doughnut',
@@ -138,7 +138,19 @@ export class HomePage {
         options: {
           circumference: Math.PI,
           rotation: -Math.PI,
-          legend: { display: false }
+          legend: { display: false },
+          tooltips: {
+            callbacks: {
+              label: (tooltipItem, data) => {
+                let label = data.labels[tooltipItem.index] || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += data.datasets[0].data[tooltipItem.index].toFixed(2) + ' €';
+                return label;
+              }
+            }
+          }
         }
       });
       this.inChartRef = new Chart(this.inChart.nativeElement, {
@@ -147,7 +159,19 @@ export class HomePage {
         options: {
           circumference: Math.PI,
           rotation: -Math.PI,
-          legend: { display: false }
+          legend: { display: false },
+          tooltips: {
+            callbacks: {
+              label: (tooltipItem, data) => {
+                let label = data.labels[tooltipItem.index] || '';
+                if (label) {
+                  label += ': ';
+                }
+                label += data.datasets[0].data[tooltipItem.index].toFixed(2) + ' €';
+                return label;
+              }
+            }
+          }
         }
       });
     });
