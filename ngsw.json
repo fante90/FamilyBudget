@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1590447044218,
+  "timestamp": 1590447512687,
   "index": "https://fante90.github.io/FamilyBudget/index.html",
   "assetGroups": [
     {
@@ -490,7 +490,7 @@
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-192x192.png": "d56bb494f7e96f82db7f64e69a2636d1a46a0980",
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-384x384.png": "e43609e86c4682892bd853a5df7ec303d1d4e19b",
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-512x512.png": "01ac228c95775a9845b0d1498630f5760b8d291d",
-    "https://fante90.github.io/FamilyBudget/assets/icons/icon-72x72.png": "413f0e09439d61105ea27712274cff2466739743",
+    "https://fante90.github.io/FamilyBudget/assets/icons/icon-72x72.png": "7fa57041873fd14ecac648b5599ce72d838bb017",
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-96x96.png": "e4bf624ae182d51c845e65cb86b450fe4ca556ec",
     "https://fante90.github.io/FamilyBudget/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
     "https://fante90.github.io/FamilyBudget/common-es2015.87979dc35beee51eecf8.js": "36e60ae44229abb506fb49826c56c489e9cdcb31",
