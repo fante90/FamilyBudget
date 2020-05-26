@@ -2,7 +2,7 @@
   "name": "FamilyBudget",
   "short_name": "FB",
   "theme_color": "#00b0b7",
-  "background_color": "#FFFFFF",
+  "background_color": "#F9F9F9",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

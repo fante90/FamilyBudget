@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1590525329205,
+  "timestamp": 1590525713252,
   "index": "https://fante90.github.io/FamilyBudget/index.html",
   "assetGroups": [
     {
@@ -498,7 +498,7 @@
     "https://fante90.github.io/FamilyBudget/index.html": "ac63b907a729f78353a8986febf24f3a175fc58a",
     "https://fante90.github.io/FamilyBudget/main-es2015.c05530ce485fd3f5d907.js": "f5c3c1694ef00fa70e25cc310403393afc6db4fb",
     "https://fante90.github.io/FamilyBudget/main-es5.c05530ce485fd3f5d907.js": "c59b9f5025b062bd0e73fe5d036979513a86c320",
-    "https://fante90.github.io/FamilyBudget/manifest.webmanifest": "3cc7b6207c52792bdcebec6dbbe8dd12cab0d3d5",
+    "https://fante90.github.io/FamilyBudget/manifest.webmanifest": "a751d29c25c1044e8505b8e6c23854ab7adb7235",
     "https://fante90.github.io/FamilyBudget/polyfills-es2015.d073f71d600554e78407.js": "9572e112f9bcfee6cebd2d670173ddd921d0c128",
     "https://fante90.github.io/FamilyBudget/polyfills-es5.251d7181ee3c33ad6f5c.js": "de4195f67141f9289453abe42ea9c30edff1e653",
     "https://fante90.github.io/FamilyBudget/runtime-es2015.b559bcf77161afb2915e.js": "172a6bee0a5e657d8c46af741024d2997a4de998",
