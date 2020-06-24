@@ -129,6 +129,7 @@ export class ListMovimentsPage {
    * Metodo che inizializza/aggiorna l'elenco delle categorie
    */
   public refreshList(event = null) {
+    this.moviments = []; // Svuoto l'elenco
     // creo il selector in base ai filtri impostati
     const selector = {
       entity: Moviment.entityName,
@@ -182,7 +183,13 @@ export class ListMovimentsPage {
     return total;
   }
 
-  ionViewDidEnter() {
+  /**
+   * Metodo richiamato quando cambia il filtro nel componente fb-date-filter-toolbar
+   * @param filterData oggetto che contiene data inizio e data fine da impostare come filtro
+   */
+  dateFilterChanged(filterData) {
+    this.listFilterModel.fromDate = filterData.start.toISOString();
+    this.listFilterModel.toDate = filterData.end.toISOString();
     this.refreshList();
   }
 }

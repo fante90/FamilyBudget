@@ -45,7 +45,7 @@ export class AppComponent {
       // Registro l'evento che notifica un nuovo aggiornamento della pwa tramite il service worker
       this.swUpdate.available.subscribe(event => {
         this.uiService.presentToast({
-          message: 'E\' disponibile una nuova versione del programma',
+          message: 'E\' disponibile una nuova versione dell\'app',
           position: 'bottom',
           color: 'tertiary',
           buttons: [

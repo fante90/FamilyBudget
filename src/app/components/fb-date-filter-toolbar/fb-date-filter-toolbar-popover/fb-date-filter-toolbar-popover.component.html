@@ -1,0 +1,37 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-title class="ion-text-center">
+            Seleziona l'intervallo
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-grid class="ion-no-padding">
+        <ion-row>
+            <ion-col (click)="chooseFilter('TODAY')" [class]="(current == 'TODAY') ? 'filter-btn current' : 'filter-btn'" size="6">
+                <div><ion-icon size="large" name="today-outline"></ion-icon></div>
+                Oggi
+            </ion-col>
+            <ion-col (click)="chooseFilter('WEEK')" [class]="(current == 'WEEK') ? 'filter-btn current' : 'filter-btn'" size="6">
+                <div class="text-ico">W</div>
+                <div>Settimana</div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col (click)="chooseFilter('MONTH')" [class]="(current == 'MONTH') ? 'filter-btn current' : 'filter-btn'" size="6">
+                <div><ion-icon size="large" name="calendar-outline"></ion-icon></div>
+                Mese
+            </ion-col>
+            <ion-col (click)="chooseFilter('YEAR')" [class]="(current == 'YEAR') ? 'filter-btn current' : 'filter-btn'" size="6">
+                <div class="text-ico">Y</div>
+                <div>Anno</div>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="(platform.is('android') || platform.is('ios')) && !platform.is('pwa') && !platform.is('mobileweb')">
+            <ion-col (click)="selectDay()" class="filter-btn" size="12">
+                <div class="text-ico">D</div>
+                <div>Seleziona un giorno</div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

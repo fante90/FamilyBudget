@@ -1,6 +1,6 @@
 <div>
   <ion-list mode="ios">
-    <ion-list-header class="ion-padding-bottom">
+    <ion-list-header>
       <ion-label class="ion-no-margin">Movimenti</ion-label>
       <ion-icon
         (click)="openModalSetFilter()"
@@ -11,6 +11,7 @@
       ></ion-icon>
     </ion-list-header>
   </ion-list>
+  <app-fb-date-filter-toolbar (changed)="dateFilterChanged($event)"></app-fb-date-filter-toolbar>
 </div>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">

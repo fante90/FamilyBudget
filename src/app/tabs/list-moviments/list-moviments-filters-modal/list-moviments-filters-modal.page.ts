@@ -44,7 +44,13 @@ export class ListMovimentsFiltersModalPage {
     if (movType !== '*') {
       selector = {
         entity: MovimentCategory.entityName,
-        type: movType
+        type: movType,
+        description: { $gte: '' } // workaround per ordinare per nome della categoria
+      };
+    } else {
+      selector = {
+        entity: MovimentCategory.entityName,
+        description: { $gte: '' } // workaround per ordinare per nome della categoria
       };
     }
     this.movimentCategories = await MovimentCategory.getEntries(this.appDBService, false, null, selector);

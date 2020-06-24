@@ -55,7 +55,8 @@ export class AddMovimentModalPage {
     if (tmpModel.type) {
       this.movimentCategories = await MovimentCategory.getEntries(this.appDBService, false, null, {
         entity: MovimentCategory.entityName,
-        type: tmpModel.type
+        type: tmpModel.type,
+        description: { $gte: '' } // workaround per ordinare per nome della categoria
       });
     }
     this.model = tmpModel;

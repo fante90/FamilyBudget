@@ -1,5 +1,7 @@
 {
   "name": "FamilyBudget2",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }

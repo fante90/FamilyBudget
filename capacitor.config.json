@@ -1,0 +1,13 @@
+{
+  "appId": "com.fante90.familybudget",
+  "appName": "FamilyBudget",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

@@ -119,7 +119,11 @@ export class ListCategoriesPage {
    * Metodo che inizializza/aggiorna l'elenco delle categorie
    */
   public refreshList(event = null) {
-    MovimentCategory.getEntries(this.appDBService).then(result => {
+    const selector = {
+      entity: MovimentCategory.entityName,
+      description: { $gte: '' } // workaround per ordinare per nome della categoria
+    };
+    MovimentCategory.getEntries(this.appDBService, false, null, selector).then(result => {
       this.categories = result;
       if (event) {
         event.target.complete();

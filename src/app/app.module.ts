@@ -15,7 +15,9 @@ import { ListMovimentsFiltersModalPageModule } from './tabs/list-moviments/list-
 import { FbColorPickerModule } from './components/fb-color-picker/fb-color-picker.module';
 import { FbIconPickerModule } from './components/fb-icon-picker/fb-icon-picker.module';
 import { FbHeaderComponent } from './components/fb-header/fb-header.component';
+import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
+
 import { environment } from '../environments/environment';
 
 
@@ -37,7 +39,8 @@ import { environment } from '../environments/environment';
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    DatePicker
   ],
   bootstrap: [AppComponent]
 })
