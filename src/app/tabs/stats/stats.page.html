@@ -1,7 +1,81 @@
-<ion-content>
-  <ion-list lines="full" mode="ios">
+<div>
+  <ion-list mode="ios">
     <ion-list-header>
-      Coming Soon
+      <ion-label class="ion-no-margin">Statistiche</ion-label>
     </ion-list-header>
   </ion-list>
+  <app-fb-date-filter-toolbar (changed)="dateFilterChanged($event)">
+  </app-fb-date-filter-toolbar>
+</div>
+<div style="margin: 5px; margin-top: -5px;">
+  <ion-segment
+    mode="ios"
+    (ionChange)="segmentChanged($event)"
+    value="out"
+    color="medium"
+  >
+    <ion-segment-button value="out" layout="icon-start">
+      <ion-icon color="danger" name="arrow-down"></ion-icon>
+      <ion-label color="danger">
+        Uscite <br />
+        {{ totalOut | number:'1.2-2'}} &euro;
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="in" layout="icon-start">
+      <ion-icon color="success" name="arrow-up"></ion-icon>
+      <ion-label color="success">
+        Entrate <br />
+        {{ totalIn | number:'1.2-2'}} &euro;
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</div>
+<ion-content #mainContent [scrollEvents]="true" color="light">
+  <ion-slides #chartSlider pager="false" [options]="chartSliderOpts">
+    <ion-slide>
+      <div class="chart-container">
+        <div class="chart">
+          <canvas #statsOutChart></canvas>
+        </div>
+      </div>
+    </ion-slide>
+    <ion-slide>
+      <div class="chart-container">
+        <div class="chart">
+          <canvas #statsInChart></canvas>
+        </div> 
+      </div>
+    </ion-slide>
+  </ion-slides>
+  <div *ngIf="chartCategsDetail.length > 0">
+    <h5 class="ion-text-center"><strong>{{ chartSelectedEl }}</strong></h5>
+    <ion-card>
+      <ion-card-content class="ion-no-margin ion-no-padding">
+        <ion-item (click)="showCatMoviments(category.id_category, category.index)" lines="full" *ngFor="let category of chartCategsDetail">
+          <div
+            slot="start"
+            class="round-icon"
+            [ngStyle]="{'background-color': category.color}"
+          >
+            <ion-icon name="{{ category.icon }}"></ion-icon>
+          </div>
+          <ion-label>
+            <strong><small>{{ category.description | uppercase }}</small></strong>
+            <div class="perc-bar-content">
+              <div
+                [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}"
+                class="perc-bar"
+              ></div>
+              <div class="perc">{{ category.perc | number:'1.1-1'}} %</div>
+            </div>
+            <div class="ion-text-end">
+              <strong
+                ><small>{{ category.value | number:'1.2' }} &euro;</small></strong
+              >
+            </div>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

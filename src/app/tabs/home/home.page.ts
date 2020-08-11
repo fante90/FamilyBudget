@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { Moviment } from '../../classes/Moviment';
-import { UIService } from '../../services/ui.service';
 import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
 import { Chart } from 'chart.js';
 import { IonSlides } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -29,13 +29,13 @@ export class HomePage {
     initialSlide: 0,
     speed: 400,
     allowTouchMove: false
-  }
+  };
   private outChartRef = null;
   private inChartRef = null;
 
   constructor(
     private appDBService: FamilyBudgetDBService,
-    private uiService: UIService) {
+    private router: Router) {
   }
 
   ionViewDidEnter() {
@@ -132,6 +132,7 @@ export class HomePage {
       this.categoriesTotalIn.sort((a, b) => {
         return (a.value > b.value) ? -1 : 1;
       });
+      // configurazione grafico categorie movimenti in uscita
       this.outChartRef = new Chart(this.outChart.nativeElement, {
         type: 'doughnut',
         data: chartDataOut,
@@ -153,6 +154,7 @@ export class HomePage {
           }
         }
       });
+      // configurazione grafico categorie movimenti in entrata
       this.inChartRef = new Chart(this.inChart.nativeElement, {
         type: 'doughnut',
         data: chartDataIn,
@@ -175,6 +177,14 @@ export class HomePage {
         }
       });
     });
+  }
+
+  /**
+   * Mostra la lista dei movimenti dell'ultimo anno filtrata per la categoria ricevuta per parametro
+   * @param idCategory categoria per cui mostrare il movimenti
+   */
+  showCatMoviments(idCategory) {
+    this.router.navigate(['/t/list-moviments', { category: idCategory, filterDateType: 'YEAR' }]);
   }
 
   slideNext() {

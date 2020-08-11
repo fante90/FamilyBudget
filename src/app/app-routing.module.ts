@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, NoPreloading } from '@angular/router';
+import { RouterModule, Routes, NoPreloading, PreloadAllModules } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -17,7 +17,10 @@ const routes: Routes = [
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: NoPreloading })
+    // Impostato il preload di tutti i moduli per far si che in modalità PWA offline è possibile accedere a tutte le videate
+    // sono escluse solo le risorse di tipo immagine che in caso si vada offline non vengono caricate ma non compromettono la
+    // funzionalità della PWA
+    RouterModule.forRoot(routes, { preloadingStrategy: NoPreloading }) 
   ],
   exports: [RouterModule]
 })

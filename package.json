@@ -1,6 +1,6 @@
 {
   "name": "family-budget",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Fante90 - Alessandro Fantino",
   "homepage": "",
   "scripts": {
@@ -61,5 +61,5 @@
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
   },
-  "description": "An Ionic project"
+  "description": "Family Budget - app per la contabilità familiare"
 }

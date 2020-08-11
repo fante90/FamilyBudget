@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, NgZone } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, NgZone, Input } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { FbDateFilterToolbarPopoverComponent } from './fb-date-filter-toolbar-popover/fb-date-filter-toolbar-popover.component';
 import { createGesture } from '@ionic/core';
@@ -12,6 +12,8 @@ import { ChangeDetectorRef } from '@angular/core';
 
 export class FbDateFilterToolbarComponent implements OnInit {
 
+    @Input() initConfig; // permette di forzare in inizializzazione range e offset 
+    @Input() saveConfig = true; // determina se salvare in localStorage la configurazione scelta
     @Output() changed = new EventEmitter<any>();
     private currRange = '';
     private offset = 0;
@@ -21,23 +23,30 @@ export class FbDateFilterToolbarComponent implements OnInit {
     public filterIcon = '';
     private lastOnSwipe = Date.now();
 
-    constructor(private popoverCtrl: PopoverController, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) {
-        // Verifico se ho una configurazione salvata in local storage
-        let objLSDateFilter: any = window.localStorage.getItem('fb-date-filter');
-        if (objLSDateFilter) {
-            objLSDateFilter = JSON.parse(objLSDateFilter);
-            this.currRange = objLSDateFilter.range;
-            this.offset = objLSDateFilter.offset;
-        } else {
-            // Inizializzo la configurazione default: mese corrente
-            this.currRange = 'MONTH';
-            this.offset = 0;
-            this.updateOnLocalStorage();
-        }
-        this.updateIconAndLabel();
-    }
+    constructor(private popoverCtrl: PopoverController, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) {}
 
     ngOnInit() {
+        // Verifico se presente una configurazione da forzare in inizializzazione
+        if (this.initConfig) {
+            this.currRange = this.initConfig.range;
+            this.offset = parseInt(this.initConfig.offset, 10);
+        } else {
+            // Verifico se ho una configurazione salvata in local storage
+            let objLSDateFilter: any = window.localStorage.getItem('fb-date-filter');
+            if (objLSDateFilter) {
+                objLSDateFilter = JSON.parse(objLSDateFilter);
+                this.currRange = objLSDateFilter.range;
+                this.offset = objLSDateFilter.offset;
+            } else {
+                // Inizializzo la configurazione default: mese corrente
+                this.currRange = 'MONTH';
+                this.offset = 0;
+                this.updateOnLocalStorage();
+            }
+        }
+
+        this.updateIconAndLabel();
+
         // Traccio lo swipe sul componente così da usarlo per cambiare l'offset dell'intervallo di filtro
         const gesture = createGesture({
             el: document.querySelector('.date-toolbar'),
@@ -113,7 +122,7 @@ export class FbDateFilterToolbarComponent implements OnInit {
                     startDate.setTime(startDate.getTime() + (-1 * 1000 * 60 * 60 * 24));
                 }
                 endDate = new Date();
-                endDate.setHours(0, 0, 0);
+                endDate.setHours(23, 59, 59);
                 while (endDate.getDay() !== 0) { // Cerco la domenica
                     endDate.setTime(endDate.getTime() + (1000 * 60 * 60 * 24));
                 }
@@ -135,6 +144,7 @@ export class FbDateFilterToolbarComponent implements OnInit {
                 startDate.setMonth(startDate.getMonth() + this.offset);
                 // calcolo data fine del mese
                 endDate = new Date(startDate.getFullYear(), (startDate.getMonth() + 1), 0);
+                endDate.setHours(23, 59, 59);
                 // aggiorno la label
                 this.filterLabel = this.monthsLabel[startDate.getMonth()] + ' ' + startDate.getFullYear();
                 break;
@@ -145,6 +155,7 @@ export class FbDateFilterToolbarComponent implements OnInit {
                 // aggiungo/sottraggo l'offset di anni
                 startDate.setFullYear(startDate.getFullYear() + this.offset);
                 endDate.setFullYear(endDate.getFullYear() + this.offset);
+                endDate.setHours(23, 59, 59);
                 // aggiorno la label
                 this.filterLabel = 'ANNO ' + startDate.getFullYear();
                 break;
@@ -154,7 +165,8 @@ export class FbDateFilterToolbarComponent implements OnInit {
         setTimeout(() => {
             this.changed.emit({
                 start: startDate,
-                end: endDate
+                end: endDate,
+                range: this.currRange 
             });
         }, 1);
 
@@ -185,9 +197,11 @@ export class FbDateFilterToolbarComponent implements OnInit {
      * Metodo che si occupa di salvare l'ultimo filtro impostato nel local storage
      */
     private updateOnLocalStorage() {
-        window.localStorage.setItem('fb-date-filter', JSON.stringify({
-            range: this.currRange,
-            offset: this.offset
-        }));
+        if(this.saveConfig){
+            window.localStorage.setItem('fb-date-filter', JSON.stringify({
+                range: this.currRange,
+                offset: this.offset
+            }));
+        }
     }
 }

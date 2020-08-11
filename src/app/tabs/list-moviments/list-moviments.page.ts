@@ -5,6 +5,7 @@ import { AddMovimentModalPage } from 'src/app/modals/add-moviment-modal/add-movi
 import { Moviment } from 'src/app/classes/Moviment';
 import { ListMovimentsFiltersModalPage } from './list-moviments-filters-modal/list-moviments-filters-modal.page';
 import { UtilityService } from 'src/app/services/utility.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-moviments',
@@ -13,18 +14,36 @@ import { UtilityService } from 'src/app/services/utility.service';
 })
 export class ListMovimentsPage {
   public listFilterModel = {
-    // Uso toISOString() per il componente ion-date nella modale, altrimenti non mostra la data correttamente
-    fromDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0).toISOString(), // ultimo mese
-    toDate: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 23, 59, 0).toISOString(),
+    fromDate: null,
+    toDate: null,
     type: '*',
     category: '*'
   };
   public moviments: Array<IMoviment> = [];
 
+  public dateFilterToolbarInitConfig = null;
+  public dateFilterToolbarSaveConfig = true;
+
   constructor(
     private uiService: UIService,
     private appDBService: FamilyBudgetDBService,
-    private utilityService: UtilityService) { }
+    private utilityService: UtilityService,
+    private route: ActivatedRoute) {
+    // Verifico la presenza di parametri per sovrascrivere l'inizializzazione del modello di filtri
+    this.route.params.subscribe(params => {
+      if (params.category) { // parametro per sovrascrivere la categoria di filtro
+        this.listFilterModel.category = params.category;
+      }
+      if (params.filterDateType) { // parametro per sovrascrivere il range di date di filtro
+        let offset = 0;
+        if (params.filterDateOffset) { // parametro per sovrascrivere l'offset del filtro
+          offset = params.filterDateOffset;
+        }
+        this.dateFilterToolbarInitConfig = { range: params.filterDateType, offset: offset };
+        this.dateFilterToolbarSaveConfig = false; // in questo caso non salvo in localStorage la configurazione passata al componente
+      }
+    });
+  }
 
   /**
    * Metodo utilizzato dal action button in basso a destra
@@ -126,7 +145,7 @@ export class ListMovimentsPage {
   }
 
   /**
-   * Metodo che inizializza/aggiorna l'elenco delle categorie
+   * Metodo che inizializza/aggiorna l'elenco dei movimenti
    */
   public refreshList(event = null) {
     this.moviments = []; // Svuoto l'elenco
@@ -177,6 +196,38 @@ export class ListMovimentsPage {
     if (this.moviments) {
       this.moviments.forEach(mov => {
         total += (mov.value * (mov.type === 'P' ? 1 : -1));
+      });
+    }
+
+    return total;
+  }
+
+  /**
+   * Metodo che restituisce la somma dei movimenti in uscita
+   */
+  getTotalOut() {
+    let total = 0;
+    if (this.moviments) {
+      this.moviments.forEach(mov => {
+        if(mov.type !== 'P') {
+          total += mov.value * -1;
+        }
+      });
+    }
+
+    return total;
+  }
+
+  /**
+   * Metodo che restituisce la somma dei movimenti in entrata
+   */
+  getTotalIn() {
+    let total = 0;
+    if (this.moviments) {
+      this.moviments.forEach(mov => {
+        if(mov.type === 'P') {
+          total += mov.value;
+        }
       });
     }
 

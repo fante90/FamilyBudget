@@ -11,7 +11,12 @@
       ></ion-icon>
     </ion-list-header>
   </ion-list>
-  <app-fb-date-filter-toolbar (changed)="dateFilterChanged($event)"></app-fb-date-filter-toolbar>
+  <app-fb-date-filter-toolbar 
+    [initConfig]="dateFilterToolbarInitConfig"
+    [saveConfig]="dateFilterToolbarSaveConfig"
+    (changed)="dateFilterChanged($event)"
+  >
+  </app-fb-date-filter-toolbar>
 </div>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
@@ -70,7 +75,15 @@
   <ion-list lines="none" class="ion-no-padding">
     <ion-item color="light">
       <ion-label>
-        <h3><strong>TOTALE: {{ getTotal() | number:'1.2-2' }} &euro;</strong></h3>
+        <h3>
+          <strong>
+            <ion-text>= {{ getTotal() | number:'1.2-2' }} &euro;</ion-text>
+            &nbsp;&nbsp;&nbsp;
+            <ion-text color="danger"><ion-icon name="arrow-down"></ion-icon> {{ getTotalOut() | number:'1.2-2'}} &euro;</ion-text>
+            &nbsp;&nbsp;&nbsp;
+            <ion-text color="success"><ion-icon name="arrow-up"></ion-icon> {{ getTotalIn() | number:'1.2-2'}} &euro;</ion-text>
+          </strong>
+        </h3>
       </ion-label>
     </ion-item>
   </ion-list>

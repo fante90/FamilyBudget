@@ -38,7 +38,7 @@
     <ion-slide>
       <ion-card style="width:100%">
         <ion-card-content class="ion-no-margin ion-no-padding" >
-          <ion-item lines="full" *ngFor="let category of categoriesTotalOut">
+          <ion-item (click)="showCatMoviments(category._id)" lines="full" *ngFor="let category of categoriesTotalOut">
             <div
             slot="start"
             class="round-icon"
@@ -65,7 +65,7 @@
     <ion-slide>
       <ion-card style="width:100%">
         <ion-card-content class="ion-no-margin ion-no-padding" >
-          <ion-item lines="full" *ngFor="let category of categoriesTotalIn">
+          <ion-item (click)="showCatMoviments(category._id)" lines="full" *ngFor="let category of categoriesTotalIn">
             <div
             slot="start"
             class="round-icon"
