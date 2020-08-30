@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1598815345768,
+  "timestamp": 1598817135565,
   "index": "https://fante90.github.io/FamilyBudget/index.html",
   "assetGroups": [
     {
@@ -212,16 +212,16 @@
         "https://fante90.github.io/FamilyBudget/98-es5.3389dac4990562c7fa9b.js",
         "https://fante90.github.io/FamilyBudget/99-es2015.37fa29c1d7530a123282.js",
         "https://fante90.github.io/FamilyBudget/99-es5.37fa29c1d7530a123282.js",
-        "https://fante90.github.io/FamilyBudget/common-es2015.6803ebbaa8f6c0d42d62.js",
-        "https://fante90.github.io/FamilyBudget/common-es5.6803ebbaa8f6c0d42d62.js",
+        "https://fante90.github.io/FamilyBudget/common-es2015.da614edae9cac8e2b9ee.js",
+        "https://fante90.github.io/FamilyBudget/common-es5.da614edae9cac8e2b9ee.js",
         "https://fante90.github.io/FamilyBudget/index.html",
         "https://fante90.github.io/FamilyBudget/main-es2015.8d9af602de4ae2e275e7.js",
         "https://fante90.github.io/FamilyBudget/main-es5.8d9af602de4ae2e275e7.js",
         "https://fante90.github.io/FamilyBudget/manifest.webmanifest",
         "https://fante90.github.io/FamilyBudget/polyfills-es2015.6c2df42d7003f4ca5e26.js",
         "https://fante90.github.io/FamilyBudget/polyfills-es5.4e681bb23f0cdf57ea25.js",
-        "https://fante90.github.io/FamilyBudget/runtime-es2015.26853fc6f3bce6e43dc6.js",
-        "https://fante90.github.io/FamilyBudget/runtime-es5.26853fc6f3bce6e43dc6.js",
+        "https://fante90.github.io/FamilyBudget/runtime-es2015.06fb7ef41bf906686e62.js",
+        "https://fante90.github.io/FamilyBudget/runtime-es5.06fb7ef41bf906686e62.js",
         "https://fante90.github.io/FamilyBudget/styles.8aa0405352acdceda24c.css"
       ],
       "patterns": []
@@ -497,16 +497,16 @@
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-72x72.png": "2b6a604f173f04b514c85686925d7f95f904c16d",
     "https://fante90.github.io/FamilyBudget/assets/icons/icon-96x96.png": "b81b2e8e1697baa95d1b9c040f65927a8013af30",
     "https://fante90.github.io/FamilyBudget/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
-    "https://fante90.github.io/FamilyBudget/common-es2015.6803ebbaa8f6c0d42d62.js": "416373f2ffb443c87849ef8df98055f37cb2b99a",
-    "https://fante90.github.io/FamilyBudget/common-es5.6803ebbaa8f6c0d42d62.js": "532078ee6f2b3365f22de785226b1d6dbe037248",
-    "https://fante90.github.io/FamilyBudget/index.html": "d08c6c7cce68d0c5b1dfd1e22b36a9bf93ee0311",
+    "https://fante90.github.io/FamilyBudget/common-es2015.da614edae9cac8e2b9ee.js": "34f1cf4247c3ce3e6aacbb6149d7c0d7fc0ca53b",
+    "https://fante90.github.io/FamilyBudget/common-es5.da614edae9cac8e2b9ee.js": "bd58f94cad12db845ee88f66862832656ff1bfa3",
+    "https://fante90.github.io/FamilyBudget/index.html": "ef0dbb7a3e48bc50af886ebde8459d610deb5459",
     "https://fante90.github.io/FamilyBudget/main-es2015.8d9af602de4ae2e275e7.js": "d1548a00aba0fb19724c3b5290315604a6e50f38",
     "https://fante90.github.io/FamilyBudget/main-es5.8d9af602de4ae2e275e7.js": "08f92b8c3594500faddfd4ee5074fe4a4723bd7b",
     "https://fante90.github.io/FamilyBudget/manifest.webmanifest": "065985e166a0dfd3c49ddf7aa26b64d54373c5ad",
     "https://fante90.github.io/FamilyBudget/polyfills-es2015.6c2df42d7003f4ca5e26.js": "3a317796341740e4e46675ce23a204ee291e4029",
     "https://fante90.github.io/FamilyBudget/polyfills-es5.4e681bb23f0cdf57ea25.js": "3248c705062f6c8048f4d968e9e0679f65e9f04c",
-    "https://fante90.github.io/FamilyBudget/runtime-es2015.26853fc6f3bce6e43dc6.js": "c232811ae41fed4d8fbcf38a5335655e63d31b21",
-    "https://fante90.github.io/FamilyBudget/runtime-es5.26853fc6f3bce6e43dc6.js": "a03a109bdebe8e84a9ec076b99f65fe6b8577a47",
+    "https://fante90.github.io/FamilyBudget/runtime-es2015.06fb7ef41bf906686e62.js": "b2f6f184486375315d8cb662c43c37aad5ce0ec7",
+    "https://fante90.github.io/FamilyBudget/runtime-es5.06fb7ef41bf906686e62.js": "b5e4df142f5e85cfa8cda9e5f17bc6dc1ebcf17d",
     "https://fante90.github.io/FamilyBudget/styles.8aa0405352acdceda24c.css": "3786d19f4428a728f88dc6d5ee76bd48d62399a8"
   },
   "navigationUrls": [
