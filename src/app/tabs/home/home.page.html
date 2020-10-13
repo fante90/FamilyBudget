@@ -3,10 +3,37 @@
     <ion-card-header class="ion-text-center">
       <ion-card-subtitle><strong>BILANCIO ANNUALE</strong></ion-card-subtitle>
       <ion-card-title>
-        <ion-spinner *ngIf="yearlyBalance == ''" name="dots"></ion-spinner>
-        <strong *ngIf="yearlyBalance != ''">{{ yearlyBalance }} &euro;</strong>
+        <ion-spinner *ngIf="yearlyBalance === null" name="dots"></ion-spinner>
+        <strong *ngIf="yearlyBalance !== null"><span *ngIf="yearlyBalance > 0">+</span> {{ yearlyBalance | number: "1.2" }} &euro;</strong>
       </ion-card-title>
     </ion-card-header>
+    <ion-card-content>
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col class="ion-text-center ion-no-padding" size="4">
+            <ion-text color="success">
+                <ion-icon name="arrow-up"></ion-icon>
+            </ion-text>
+            <ion-spinner *ngIf="totalIn === null" name="dots"></ion-spinner>
+            <span *ngIf="totalIn !== null">{{ totalIn | number: "1.2" }} &euro;</span>
+          </ion-col>
+          <ion-col class="ion-text-center ion-no-padding" size="4">
+            <ion-text color="danger">
+                <ion-icon name="arrow-down"></ion-icon>
+            </ion-text>
+            <ion-spinner *ngIf="totalOutNoInv === null" name="dots"></ion-spinner>
+            <span *ngIf="totalOutNoInv !== null">{{ totalOutNoInv | number: "1.2" }} &euro;</span>
+          </ion-col>
+          <ion-col class="ion-text-center ion-no-padding" size="4">
+            <ion-text color="tertiary">
+                <ion-icon name="trending-up-outline"></ion-icon> 
+            </ion-text>
+            <ion-spinner *ngIf="totalInv === null" name="dots"></ion-spinner>
+            <span *ngIf="totalInv !== null">{{ totalInv | number: "1.2" }} &euro;</span>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
   </ion-card>
 </div>
 <ion-content color="light">
@@ -18,7 +45,7 @@
         </ion-card-header>
         <ion-card-content class="card-chart">
           <canvas #outChart></canvas>
-          <div class="total">{{ totalOut }} &euro;</div>
+          <div class="total">{{ totalOut | number: "1.2" }} &euro;</div>
         </ion-card-content>
       </ion-card>
     </ion-slide>
@@ -29,65 +56,17 @@
         </ion-card-header>
         <ion-card-content class="card-chart">
           <canvas #inChart></canvas>
-          <div class="total">{{ totalIn }} &euro;</div>
+          <div class="total">{{ totalIn | number: "1.2" }} &euro;</div>
         </ion-card-content>
       </ion-card>
     </ion-slide>
   </ion-slides>
   <ion-slides #listSlider pager="false" [options]="listSliderOpts">
     <ion-slide>
-      <ion-card style="width:100%">
-        <ion-card-content class="ion-no-margin ion-no-padding" >
-          <ion-item (click)="showCatMoviments(category._id)" lines="full" *ngFor="let category of categoriesTotalOut">
-            <div
-            slot="start"
-            class="round-icon"
-            [ngStyle]="{'background-color': category.color}"
-          >
-            <ion-icon
-              name="{{ category.icon }}"
-            ></ion-icon>
-          </div>
-          <ion-label>
-              <strong><small>{{ category.description | uppercase }}</small></strong>
-              <div class="perc-bar-content">
-                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar"></div>
-                <div class="perc">{{ category.perc | number:'1.1-1'}} %</div>
-              </div>
-              <div class="ion-text-end">
-                <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>
-              </div>
-          </ion-label>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+      <fb-categs-card-list style="width:100%" (itemClicked)="showCatMoviments($event)" [categories]="categoriesTotalOut"></fb-categs-card-list>
     </ion-slide>
     <ion-slide>
-      <ion-card style="width:100%">
-        <ion-card-content class="ion-no-margin ion-no-padding" >
-          <ion-item (click)="showCatMoviments(category._id)" lines="full" *ngFor="let category of categoriesTotalIn">
-            <div
-            slot="start"
-            class="round-icon"
-            [ngStyle]="{'background-color': category.color}"
-          >
-            <ion-icon
-              name="{{ category.icon }}"
-            ></ion-icon>
-          </div>
-          <ion-label>
-              <strong><small>{{ category.description | uppercase }}</small></strong>
-              <div class="perc-bar-content">
-                <div [ngStyle]="{'background-color': category.color, 'width': category.perc + '%'}" class="perc-bar"></div>
-                <div class="perc">{{ category.perc | number:'1.1-1'}} %</div>
-              </div>
-              <div class="ion-text-end">
-                <strong><small>{{ category.value | number:'1.2' }} &euro;</small></strong>
-              </div>
-          </ion-label>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+      <fb-categs-card-list style="width:100%" (itemClicked)="showCatMoviments($event)" [categories]="categoriesTotalIn"></fb-categs-card-list>
     </ion-slide>
   </ion-slides>
 </ion-content>

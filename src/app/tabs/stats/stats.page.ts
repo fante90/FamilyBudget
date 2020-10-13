@@ -17,25 +17,29 @@ export class StatsPage {
   @ViewChild('chartSlider', { static: false }) chartSlider: IonSlides;
   @ViewChild('mainContent', { static: false }) mainContent: IonContent;
 
-  public chartFilterModel = {
+  public chartFilterModel = { // modello di filtri della videata
     fromDate: null,
     toDate: null,
+    offset: 0,
     dateRange: 'YEAR'
   };
-  public chartCategsDetail = [];
-  public chartSelectedEl = '';
+  public chartCategsDetailTIn = []; // totale entrate raggruppato per categoria
+  public chartCategsDetailTOut = []; // totale uscite raggruppato per categoria
+  public chartCategsDetail = []; // dettaglio totale/specifico asse x raggruppato per categoria
+  public chartSelectedEl = ''; // label di intestazione del totale raggruppato che rappresenta l'elemento selezionato
+  public currentChart = 'out'; // indica il grafico visibile a video
 
-  private chartRefOut = null;
-  private chartRefIn = null;
+  private chartRefOut = null; // riferimento la grafico uscite
+  private chartRefIn = null; // riferimento la grafico entrate
 
-  chartSliderOpts = {
+  public chartSliderOpts = { // configurazione slider che contiene i grafici
     initialSlide: 0,
     speed: 400,
     allowTouchMove: false
   };
 
-  totalOut = 0;
-  totalIn = 0;
+  public totalOut = 0; // totale uscite
+  public totalIn = 0; // totale entrate
 
   constructor(
     private appDBService: FamilyBudgetDBService,
@@ -59,14 +63,32 @@ export class StatsPage {
       const moviments: Array<IMoviment> = result;
       this.totalOut = 0;
       this.totalIn = 0;
+      this.chartCategsDetailTIn = [];
+      this.chartCategsDetailTOut = [];
+      const months = ['Ge', 'Fe', 'Ma', 'Ap', 'Ma', 'Gi', 'Lu', 'Ag', 'Se', 'Ot', 'No', 'Di'];
       // In base al tipo di range di date determino le label dell'asse x (mesi, giorni del mese o giorni della settimana)
       let xLabels: Array<string> = [];
       if (this.chartFilterModel.dateRange === 'YEAR') {
-        xLabels = ['Ge', 'Fe', 'Ma', 'Ap', 'Ma', 'Gi', 'Lu', 'Ag', 'Se', 'Ot', 'No', 'Di'];
+        xLabels = months;
       } else if (this.chartFilterModel.dateRange === 'MONTH') {
         // gli elementi sono i giorni del mese
         for (let i = 0; i < new Date(this.chartFilterModel.toDate).getDate(); i++) {
           xLabels.push('' + (i + 1));
+        }
+      } else if (this.chartFilterModel.dateRange === 'PERIOD') {
+        // gli elementi sono i giorni del periodo
+        const startPerDate = new Date(this.chartFilterModel.fromDate);
+        const endPerDate = new Date(this.chartFilterModel.toDate);
+        const labelMonth = (startPerDate.getMonth() !== endPerDate.getMonth());
+        let labelDate = startPerDate;
+        while (labelDate.getTime() <= endPerDate.getTime()) {
+          let label = ('00' + labelDate.getDate()).slice(-2);
+          if (labelMonth) {
+            label += '/' + ('00' + (labelDate.getMonth() + 1).toString()).slice(-2);
+            //label += ' ' + months[labelDate.getMonth()];
+          }
+          xLabels.push(label);
+          labelDate = new Date(labelDate.getTime() + (1000 * 60 * 60 * 24));
         }
       } else {
         // in caso di settimana o giorno specifico il numero di elementi sono i giorni della settimana
@@ -127,6 +149,25 @@ export class StatsPage {
             chartDatasetsIn[datasetIndex].data[dayOfMonth - 1] += moviment.value;
           } else {
             chartDatasetsOut[datasetIndex].data[dayOfMonth - 1] += moviment.value;
+          }
+        } else if (this.chartFilterModel.dateRange === 'PERIOD') {
+          // se il filtro è per periodo uso come riferimento la differenza in giorni tra l'inizio del periodo e la data del movimento
+          const movDate = new Date(
+            new Date(moviment.date).getFullYear() + '-' +
+            ('00' + (new Date(moviment.date).getMonth() + 1)).slice(-2) + '-' +
+            ('00' + new Date(moviment.date).getDate()).slice(-2) +
+            'T00:00:00.000Z'
+          );
+          const days = parseInt(
+            (
+              Math.abs(new Date(this.chartFilterModel.fromDate).getTime() - movDate.getTime())
+              / 1000 / 60 / 60 / 24
+            ).toString(), 10
+          );
+          if (moviment.category.type === 'P') {
+            chartDatasetsIn[datasetIndex].data[days] += moviment.value;
+          } else {
+            chartDatasetsOut[datasetIndex].data[days] += moviment.value;
           }
         } else {
           // se il filtro è per settimana o giorno specifico uso come riferimento il giorno della settimana della data del movimento
@@ -214,6 +255,31 @@ export class StatsPage {
         }
       });
 
+      // Valorizzo le due proprietà del totale entrate e uscite raggruppati per categoria da mostrare
+      // sotto il grafico quando non si è selezionato un elemento dell'asse x
+      this.chartCategsDetailTIn = Object.assign([], chartDatasetsIn);
+      this.chartCategsDetailTOut = Object.assign([], chartDatasetsOut);
+      this.chartCategsDetailTIn.forEach(categ => {
+        categ.description = categ.label;
+        categ.index = -1;
+        categ.value = categ.data.reduce((acc, cur) => acc + cur, 0); // sommo i valori del dataset per ottenere il totale di categoria
+        categ.perc = categ.value / this.totalIn * 100;
+      });
+      this.chartCategsDetailTOut.forEach(categ => {
+        categ.description = categ.label;
+        categ.index = -1;
+        categ.value = categ.data.reduce((acc, cur) => acc + cur, 0); // sommo i valori del dataset per ottenere il totale di categoria
+        categ.perc = categ.value / this.totalOut * 100;
+      });
+      // ordino entrambi dalla categoria che incide di più a quella meno
+      this.chartCategsDetailTIn.sort((a, b) => {
+        return (a.value > b.value) ? -1 : 1;
+      });
+      this.chartCategsDetailTOut.sort((a, b) => {
+        return (a.value > b.value) ? -1 : 1;
+      });
+      this.setChartCategsTotalDetail();
+
       if (event) {
         event.target.complete();
       }
@@ -228,6 +294,7 @@ export class StatsPage {
     this.chartFilterModel.fromDate = filterData.start.toISOString();
     this.chartFilterModel.toDate = filterData.end.toISOString();
     this.chartFilterModel.dateRange = filterData.range;
+    this.chartFilterModel.offset = filterData.offset;
     this.refreshChart();
   }
 
@@ -236,12 +303,13 @@ export class StatsPage {
    */
   segmentChanged(ev: any) {
     if (ev.detail && ev.detail.value) {
-      this.chartCategsDetail = []; // svuoto il dettaglio delle categorie del grafico che si va a nascondere
+      this.currentChart = ev.detail.value;
       if (ev.detail.value === 'in') {
         this.chartSlider.slideNext();
       } else {
         this.chartSlider.slidePrev();
       }
+      this.setChartCategsTotalDetail(); // inizializzo il dettaglio delle categorie del grafico che si va a mostrare
     }
   }
 
@@ -281,6 +349,9 @@ export class StatsPage {
       });
       // scroll verso il dettaglio delle categorie
       this.scrollToBottom(chartRef);
+    } else {
+      // nel caso nessun elemento sia selezionato mostro il totale entrate/uscite
+      this.setChartCategsTotalDetail();
     }
   }
 
@@ -296,20 +367,30 @@ export class StatsPage {
 
   /**
    * Mostra la lista dei movimenti filtrata per la categoria ricevuta per parametro
-   * @param idCategory categoria per cui mostrare il movimenti
-   * @param offset offset che arriva dall'indice dell'elemento asse x cliccato
+   * @param category categoria per cui mostrare il movimenti
    */
-  showCatMoviments(idCategory, offsetChart) {
+  showCatMoviments(category) {
     // calcolo il filtro di data da passare alla videata per ottenere i movimenti dell'asse x selezionato
     let offset = 0;
     let dateType = 'YEAR';
-    if (this.chartFilterModel.dateRange === 'YEAR') {
+    let custStartDate = null;
+    let custEndDate = null;
+    if (category.index === -1) {
+      // in questo caso sto visualizzando il raggruppamento delle categorie in base al totale quindi il filtro di data
+      // è esattamente quello del modello di filtro
+      dateType = this.chartFilterModel.dateRange;
+      offset = this.chartFilterModel.offset;
+      if (this.chartFilterModel.dateRange === 'PERIOD') {
+        custStartDate = this.chartFilterModel.fromDate;
+        custEndDate = this.chartFilterModel.toDate;
+      }
+    } else if (this.chartFilterModel.dateRange === 'YEAR') {
       // se il filtro della videata è per anno devo ricavare il mese selezionato
       const filterDateYear = new Date(this.chartFilterModel.fromDate).getFullYear();
       const currentDateYear = new Date().getFullYear();
       const currentDateMonth = new Date().getMonth();
       offset = (filterDateYear - currentDateYear) * 12;
-      offset += (offsetChart - currentDateMonth);
+      offset += (category.index - currentDateMonth);
       dateType = 'MONTH';
     } else {
       // in tutti gli altri casi mostro il giorno selezionato
@@ -317,10 +398,10 @@ export class StatsPage {
       const filterDate = new Date(this.chartFilterModel.fromDate);
       let dayOfFilter = null;
       if (this.chartFilterModel.dateRange === 'MONTH') {
-        dayOfFilter = new Date(filterDate.getFullYear(), filterDate.getMonth(), offsetChart + 1);
-      } else if (this.chartFilterModel.dateRange === 'WEEK') {
+        dayOfFilter = new Date(filterDate.getFullYear(), filterDate.getMonth(), category.index + 1);
+      } else if (this.chartFilterModel.dateRange === 'WEEK' || this.chartFilterModel.dateRange === 'PERIOD') {
         let tmpDate = new Date(filterDate.getFullYear(), filterDate.getMonth(), filterDate.getDate());
-        dayOfFilter = new Date(tmpDate.getTime() + (1000 * 60 * 60 * 24 * offsetChart));
+        dayOfFilter = new Date(tmpDate.getTime() + (1000 * 60 * 60 * 24 * category.index));
       } else {
         dayOfFilter = new Date(filterDate.getFullYear(), filterDate.getMonth(), filterDate.getDate());
       }
@@ -330,6 +411,28 @@ export class StatsPage {
       dateType = 'TODAY';
     }
 
-    this.router.navigate(['/t/list-moviments', { category: idCategory, filterDateType: dateType, filterDateOffset: offset }]);
+    this.router.navigate([
+      '/t/list-moviments',
+      {
+        category: category.id_category,
+        filterDateType: dateType,
+        filterDateOffset: offset,
+        filterDateStartCustDate: custStartDate,
+        filterDateEndCustDate: custEndDate
+      }
+    ]);
+  }
+
+  /**
+   * Valorizza il dettaglio categorie totale del grafico in base al grafico visualizzato
+   */
+  setChartCategsTotalDetail() {
+    if (this.currentChart === 'in') {
+      this.chartSelectedEl = 'Entrate';
+      this.chartCategsDetail = this.chartCategsDetailTIn;
+    } else {
+      this.chartSelectedEl = 'Uscite';
+      this.chartCategsDetail = this.chartCategsDetailTOut;
+    }
   }
 }

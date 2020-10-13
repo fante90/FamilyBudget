@@ -19,7 +19,7 @@ export class ListMovimentsPage {
     type: '*',
     category: '*'
   };
-  public moviments: Array<IMoviment> = [];
+  public moviments: Array<IMoviment> = null;
 
   public dateFilterToolbarInitConfig = null;
   public dateFilterToolbarSaveConfig = true;
@@ -36,10 +36,18 @@ export class ListMovimentsPage {
       }
       if (params.filterDateType) { // parametro per sovrascrivere il range di date di filtro
         let offset = 0;
+        let startCustDate = null;
+        let endCustDate = null;
         if (params.filterDateOffset) { // parametro per sovrascrivere l'offset del filtro
           offset = params.filterDateOffset;
         }
-        this.dateFilterToolbarInitConfig = { range: params.filterDateType, offset: offset };
+        if (params.filterDateStartCustDate) { // parametro per sovrascrivere la data inizio di un periodo custom
+          startCustDate = params.filterDateStartCustDate;
+        }
+        if (params.filterDateEndCustDate) { // parametro per sovrascrivere la data fine di un periodo custom
+          endCustDate = params.filterDateEndCustDate;
+        }
+        this.dateFilterToolbarInitConfig = { range: params.filterDateType, offset, startCustDate, endCustDate };
         this.dateFilterToolbarSaveConfig = false; // in questo caso non salvo in localStorage la configurazione passata al componente
       }
     });
@@ -148,7 +156,7 @@ export class ListMovimentsPage {
    * Metodo che inizializza/aggiorna l'elenco dei movimenti
    */
   public refreshList(event = null) {
-    this.moviments = []; // Svuoto l'elenco
+    this.moviments = null; // Svuoto l'elenco
     // creo il selector in base ai filtri impostati
     const selector = {
       entity: Moviment.entityName,
@@ -209,7 +217,7 @@ export class ListMovimentsPage {
     let total = 0;
     if (this.moviments) {
       this.moviments.forEach(mov => {
-        if(mov.type !== 'P') {
+        if (mov.type !== 'P') {
           total += mov.value * -1;
         }
       });
@@ -225,7 +233,7 @@ export class ListMovimentsPage {
     let total = 0;
     if (this.moviments) {
       this.moviments.forEach(mov => {
-        if(mov.type === 'P') {
+        if (mov.type === 'P') {
           total += mov.value;
         }
       });

@@ -11,18 +11,18 @@
       ></ion-icon>
     </ion-list-header>
   </ion-list>
-  <app-fb-date-filter-toolbar 
+  <fb-date-filter-toolbar 
     [initConfig]="dateFilterToolbarInitConfig"
     [saveConfig]="dateFilterToolbarSaveConfig"
     (changed)="dateFilterChanged($event)"
   >
-  </app-fb-date-filter-toolbar>
+  </fb-date-filter-toolbar>
 </div>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-list lines="full" mode="ios">
+  <ion-list *ngIf="moviments" lines="full" mode="ios">
     <ion-item-sliding
       mode="ios"
       *ngFor="let moviment of moviments; let i = index"
@@ -69,6 +69,16 @@
         <p>Nessun movimento inserito</p>
       </ion-label>
     </ion-item>
+  </ion-list>
+  <ion-list *ngIf="!moviments" lines="full" mode="ios">
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
+    <fb-skeleton-itm-movs></fb-skeleton-itm-movs>
   </ion-list>
 </ion-content>
 <ion-footer>

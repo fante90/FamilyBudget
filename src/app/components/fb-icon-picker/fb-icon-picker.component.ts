@@ -3,7 +3,7 @@ import { PopoverController } from '@ionic/angular';
 import { ionicIcons } from './icons.json';
 
 @Component({
-    selector: 'app-fb-icon-picker',
+    selector: 'fb-icon-picker',
     templateUrl: './fb-icon-picker.component.html',
     styleUrls: ['./fb-icon-picker.component.scss'],
 })

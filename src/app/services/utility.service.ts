@@ -40,6 +40,18 @@ export class UtilityService {
         return date.toISOString();
     }
 
+    public dateToYYYYMMDD(date: any) {
+        // Date
+        if (!(date instanceof Date)) {
+            // stringa
+            date = new Date(date);
+        }
+        return date.getFullYear() + '-' +
+            ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
+            ('00' + date.getDate()).slice(-2);
+
+    }
+
     /**
      * Converte un colore esadecimale in rgba
      * @param hex colore esadecimale da convertire
@@ -48,13 +60,13 @@ export class UtilityService {
     public hexToRgbA(hex, alpha) {
         let c;
         if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-          c = hex.substring(1).split('');
-          if (c.length === 3) {
-            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-          }
-          c = '0x' + c.join('');
-          return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ', ' + alpha + ')';
+            c = hex.substring(1).split('');
+            if (c.length === 3) {
+                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c = '0x' + c.join('');
+            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ', ' + alpha + ')';
         }
         throw new Error('Bad Hex');
-      }
+    }
 }

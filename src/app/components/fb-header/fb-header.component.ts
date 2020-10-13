@@ -3,7 +3,7 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
-  selector: 'app-fb-header',
+  selector: 'fb-header',
   templateUrl: './fb-header.component.html',
   styleUrls: ['./fb-header.component.scss'],
 })

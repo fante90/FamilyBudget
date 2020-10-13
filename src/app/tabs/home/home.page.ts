@@ -15,9 +15,11 @@ export class HomePage {
   @ViewChild('inChart', { static: false }) inChart;
   @ViewChild('listSlider', { static: false }) listSlider: IonSlides;
 
-  public yearlyBalance = '';
-  public totalOut = '';
-  public totalIn = '';
+  public yearlyBalance = null; // bilancio annuale: entrate - (uscite + investimenti)
+  public totalOut = null; // totale uscite (comprese di investimenti)
+  public totalOutNoInv = null; // totale uscite (esclusi investimenti)
+  public totalIn = null; // totale entrate
+  public totalInv = null; // totale investimenti
   public categoriesTotalOut = [];
   public categoriesTotalIn = [];
 
@@ -47,7 +49,11 @@ export class HomePage {
    * e genera i due grafici di entrate e uscite
    */
   private calcYearlyBalance() {
-    this.yearlyBalance = '';
+    this.yearlyBalance = null;
+    this.totalIn = null;
+    this.totalOut = null;
+    this.totalOutNoInv = null;
+    this.totalInv = null;
     const selector = {
       entity: Moviment.entityName,
       date: {
@@ -79,6 +85,7 @@ export class HomePage {
       let sum = 0;
       let sumOut = 0;
       let sumIn = 0;
+      let sumInv = 0;
       this.categoriesTotalIn = [];
       this.categoriesTotalOut = [];
       result.forEach(moviment => {
@@ -100,6 +107,9 @@ export class HomePage {
           }
         } else { // grafico uscite
           sumOut += moviment.value;
+          if (moviment.type === 'I') {
+            sumInv += moviment.value;
+          }
           const catIndex = processedCatsOut.indexOf(moviment.id_category);
           if (catIndex >= 0) { // categoria già presente, sommo
             chartDataOut.datasets[0].data[catIndex] += moviment.value;
@@ -114,9 +124,11 @@ export class HomePage {
           }
         }
       });
-      this.yearlyBalance = ((sum >= 0) ? '+' : '') + sum.toFixed(2);
-      this.totalIn = sumIn.toFixed(2);
-      this.totalOut = '-' + sumOut.toFixed(2);
+      this.yearlyBalance = sum;
+      this.totalIn = sumIn;
+      this.totalOut = (sumOut * -1);
+      this.totalOutNoInv = (Math.abs(sumOut - sumInv) * -1);
+      this.totalInv = sumInv;
 
       // per ogni categoria aggiungo il valore percentuale in cui incide sul totale
       for (const [i, cat] of this.categoriesTotalOut.entries()) {
@@ -183,8 +195,8 @@ export class HomePage {
    * Mostra la lista dei movimenti dell'ultimo anno filtrata per la categoria ricevuta per parametro
    * @param idCategory categoria per cui mostrare il movimenti
    */
-  showCatMoviments(idCategory) {
-    this.router.navigate(['/t/list-moviments', { category: idCategory, filterDateType: 'YEAR' }]);
+  showCatMoviments(category) {
+    this.router.navigate(['/t/list-moviments', { category: category._id, filterDateType: 'YEAR' }]);
   }
 
   slideNext() {

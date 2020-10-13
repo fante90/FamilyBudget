@@ -12,17 +12,15 @@ import { FormsModule } from '@angular/forms';
 import { AddMovimentModalPageModule } from './modals/add-moviment-modal/add-moviment-modal.module';
 import { AddCategoryModalPageModule } from './modals/add-category-modal/add-category-modal.module';
 import { ListMovimentsFiltersModalPageModule } from './tabs/list-moviments/list-moviments-filters-modal/list-moviments-filters-modal.module';
-import { FbColorPickerModule } from './components/fb-color-picker/fb-color-picker.module';
-import { FbIconPickerModule } from './components/fb-icon-picker/fb-icon-picker.module';
-import { FbHeaderComponent } from './components/fb-header/fb-header.component';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { environment } from '../environments/environment';
+import { FbComponentsModule } from './components/fb-components.module';
 
 
 @NgModule({
-  declarations: [AppComponent, FbHeaderComponent],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule, IonicModule.forRoot(), AppRoutingModule,
@@ -32,8 +30,7 @@ import { environment } from '../environments/environment';
     AddMovimentModalPageModule,
     AddCategoryModalPageModule,
     ListMovimentsFiltersModalPageModule,
-    FbColorPickerModule,
-    FbIconPickerModule,
+    FbComponentsModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [

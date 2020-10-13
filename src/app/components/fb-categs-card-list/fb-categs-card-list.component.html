@@ -1,0 +1,11 @@
+<ion-card>
+    <ion-card-content class="ion-no-margin ion-no-padding" >
+        <fb-categs-card-list-itm 
+            (itemClicked)="itemClickedInt($event)"
+            lines="full" 
+            [category]="category"
+            *ngFor="let category of categories"
+        >
+        </fb-categs-card-list-itm>
+    </ion-card-content>
+</ion-card>

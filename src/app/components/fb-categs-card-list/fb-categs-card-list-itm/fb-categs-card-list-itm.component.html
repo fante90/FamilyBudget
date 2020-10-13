@@ -1,0 +1,15 @@
+<ion-item (click)="clickItem(category)" lines="full">
+  <div slot="start" class="round-icon" [ngStyle]="{ 'background-color': category.color }">
+    <ion-icon name="{{ category.icon }}"></ion-icon>
+  </div>
+  <ion-label>
+    <strong><small>{{ category.description | uppercase }}</small></strong>
+    <div class="perc-bar-content">
+      <div [ngStyle]="{'background-color': category.color, width: category.perc + '%'}" class="perc-bar"></div>
+      <div class="perc">{{ category.perc | number: "1.1-1" }} %</div>
+    </div>
+    <div class="ion-text-end">
+      <strong><small>{{ category.value | number: "1.2" }} &euro;</small></strong>
+    </div>
+  </ion-label>
+</ion-item>

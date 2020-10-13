@@ -1,10 +1,3 @@
-<ion-header mode="md" class="ion-no-border">
-    <ion-toolbar>
-        <ion-title class="ion-text-center">
-            Seleziona l'intervallo
-        </ion-title>
-    </ion-toolbar>
-</ion-header>
 <ion-content>
     <ion-grid class="ion-no-padding">
         <ion-row>
@@ -27,10 +20,14 @@
                 <div>Anno</div>
             </ion-col>
         </ion-row>
-        <ion-row *ngIf="(platform.is('android') || platform.is('ios')) && !platform.is('pwa') && !platform.is('mobileweb')">
-            <ion-col (click)="selectDay()" class="filter-btn" size="12">
+        <ion-row>
+            <ion-col (click)="selectDay()" class="filter-btn" size="6">
                 <div class="text-ico">D</div>
-                <div>Seleziona un giorno</div>
+                <div>Giorno</div>
+            </ion-col>
+            <ion-col (click)="selectPeriod()" [class]="(current == 'PERIOD') ? 'filter-btn current' : 'filter-btn'" size="6">
+                <div class="text-ico">P</div>
+                <div>Periodo</div>
             </ion-col>
         </ion-row>
     </ion-grid>

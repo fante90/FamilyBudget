@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListMovimentsPage } from './list-moviments.page';
-import { FbDateFilterToolbarModule } from 'src/app/components/fb-date-filter-toolbar/fb-date-filter-toolbar.module';
+import { FbComponentsModule } from 'src/app/components/fb-components.module';
 
 @NgModule({
   imports: [
@@ -12,7 +12,7 @@ import { FbDateFilterToolbarModule } from 'src/app/components/fb-date-filter-too
     CommonModule,
     FormsModule,
     RouterModule.forChild([{ path: '', component: ListMovimentsPage }]),
-    FbDateFilterToolbarModule
+    FbComponentsModule
   ],
   declarations: [ListMovimentsPage]
 })

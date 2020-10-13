@@ -1,6 +1,6 @@
 <div class="date-toolbar">
-    <div (click)="goPrev()" class="ion-float-left prev"><ion-icon name="chevron-back-outline"></ion-icon></div>
-    <div (click)="goNext()" class="ion-float-right next"><ion-icon name="chevron-forward-outline"></ion-icon></div>
+    <div (click)="goPrev()" *ngIf="filterIcon != 'P'" class="ion-float-left prev"><ion-icon name="chevron-back-outline"></ion-icon></div>
+    <div (click)="goNext()" *ngIf="filterIcon != 'P'" class="ion-float-right next"><ion-icon name="chevron-forward-outline"></ion-icon></div>
     <div (click)="chooseDateInterval()" class="current-date">
       <ion-icon class="ico" name="{{ filterIcon }}"></ion-icon> 
       <span class="text-ico" *ngIf="filterIcon.length == 1">{{ filterIcon }}</span>

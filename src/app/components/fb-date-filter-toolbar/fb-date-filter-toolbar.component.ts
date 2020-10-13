@@ -3,9 +3,10 @@ import { PopoverController } from '@ionic/angular';
 import { FbDateFilterToolbarPopoverComponent } from './fb-date-filter-toolbar-popover/fb-date-filter-toolbar-popover.component';
 import { createGesture } from '@ionic/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
-    selector: 'app-fb-date-filter-toolbar',
+    selector: 'fb-date-filter-toolbar',
     templateUrl: './fb-date-filter-toolbar.component.html',
     styleUrls: ['./fb-date-filter-toolbar.component.scss'],
 })
@@ -17,19 +18,27 @@ export class FbDateFilterToolbarComponent implements OnInit {
     @Output() changed = new EventEmitter<any>();
     private currRange = '';
     private offset = 0;
-    private monthsLabel = ['GENNAIO', 'FEBBRAIO', 'MARZO', 'APRILE', 'MAGGIO', 'GIUGNO', 'LUGLIO', 'AGOSTO', 'SETTEMBRE', 'OTTOBRE', 'NOVEMBRE', 'DICEMBRE'];
-    private shortMonthsLabel = ['GEN', 'FEB', 'MAR', 'APR', 'MAG', 'GIU', 'LUG', 'AGO', 'SET', 'OTT', 'NOV', 'DIC'];
+    private startCustDate = null;
+    private endCustDate = null;
+    private monthsLabel = [
+        'GENNAIO', 'FEBBRAIO', 'MARZO', 'APRILE', 'MAGGIO', 'GIUGNO', 'LUGLIO', 'AGOSTO', 'SETTEMBRE', 'OTTOBRE', 'NOVEMBRE', 'DICEMBRE'
+    ];
+    private shortMonthsLabel = [
+        'GEN', 'FEB', 'MAR', 'APR', 'MAG', 'GIU', 'LUG', 'AGO', 'SET', 'OTT', 'NOV', 'DIC'
+    ];
     public filterLabel = '';
     public filterIcon = '';
     private lastOnSwipe = Date.now();
 
-    constructor(private popoverCtrl: PopoverController, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) {}
+    constructor(private popoverCtrl: PopoverController, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) { }
 
     ngOnInit() {
         // Verifico se presente una configurazione da forzare in inizializzazione
         if (this.initConfig) {
             this.currRange = this.initConfig.range;
             this.offset = parseInt(this.initConfig.offset, 10);
+            this.startCustDate = (this.initConfig.startCustDate) ? new Date(this.initConfig.startCustDate) : null;
+            this.endCustDate = (this.initConfig.endCustDate) ? new Date(this.initConfig.endCustDate) : null;
         } else {
             // Verifico se ho una configurazione salvata in local storage
             let objLSDateFilter: any = window.localStorage.getItem('fb-date-filter');
@@ -37,6 +46,8 @@ export class FbDateFilterToolbarComponent implements OnInit {
                 objLSDateFilter = JSON.parse(objLSDateFilter);
                 this.currRange = objLSDateFilter.range;
                 this.offset = objLSDateFilter.offset;
+                this.startCustDate = (objLSDateFilter.startCustDate) ? new Date(objLSDateFilter.startCustDate) : null;
+                this.endCustDate = (objLSDateFilter.endCustDate) ? new Date(objLSDateFilter.endCustDate) : null;
             } else {
                 // Inizializzo la configurazione default: mese corrente
                 this.currRange = 'MONTH';
@@ -62,19 +73,20 @@ export class FbDateFilterToolbarComponent implements OnInit {
      *  determina se lo swipe è a destra o a sinistra e aggiorna l'offset di conseguenza
      */
     public onSwipeHandler(ev) {
-        const now = Date.now();
-        // aggiorno l'offset solo se è passato più di 100 millisecondi dall'ultimo richiamo dell'handler
-        if (Math.abs(now - this.lastOnSwipe) >= 100) {
-            this.lastOnSwipe = Date.now();
-            if ((ev.startX - ev.currentX) < 0) { // swipe verso destra, diminuisco l'offset
-                this.goPrev();
-            } else { // swipe verso sinistra, lo aumento
-                this.goNext();
+        if (this.currRange !== 'PERIOD') {
+            const now = Date.now();
+            // aggiorno l'offset solo se è passato più di 100 millisecondi dall'ultimo richiamo dell'handler
+            if (Math.abs(now - this.lastOnSwipe) >= 100) {
+                this.lastOnSwipe = Date.now();
+                if ((ev.startX - ev.currentX) < 0) { // swipe verso destra, diminuisco l'offset
+                    this.goPrev();
+                } else { // swipe verso sinistra, lo aumento
+                    this.goNext();
+                }
+            } else {
+                this.lastOnSwipe = Date.now();
             }
-        } else {
-            this.lastOnSwipe = Date.now();
         }
-
     }
 
     /**
@@ -134,7 +146,12 @@ export class FbDateFilterToolbarComponent implements OnInit {
                 if (startDate.getMonth() !== endDate.getMonth()) {
                     this.filterLabel += this.shortMonthsLabel[startDate.getMonth()];
                 }
-                this.filterLabel += ' - ' + endDate.getDate() + ' ' + this.shortMonthsLabel[endDate.getMonth()] + ' ' + endDate.getFullYear();
+                if (startDate.getFullYear() !== endDate.getFullYear()) {
+                    this.filterLabel += ' ' + startDate.getFullYear();
+                }
+                this.filterLabel += ' - ' + endDate.getDate() + ' '
+                    + this.shortMonthsLabel[endDate.getMonth()] + ' '
+                    + endDate.getFullYear();
                 break;
             case 'MONTH': // Filtro per mese
                 this.filterIcon = 'calendar-outline';
@@ -159,6 +176,24 @@ export class FbDateFilterToolbarComponent implements OnInit {
                 // aggiorno la label
                 this.filterLabel = 'ANNO ' + startDate.getFullYear();
                 break;
+            case 'PERIOD': // Filtro per periodo a scelta
+                this.filterIcon = 'P';
+                startDate = this.startCustDate;
+                endDate = this.endCustDate;
+                // aggiorno la label
+                startDate.setTime(startDate.getTime() + (this.offset * 7 * 1000 * 60 * 60 * 24));
+                endDate.setTime(endDate.getTime() + (this.offset * 7 * 1000 * 60 * 60 * 24));
+                // aggiorno la label
+                this.filterLabel = startDate.getDate() + ' ';
+                if (startDate.getMonth() !== endDate.getMonth()) {
+                    this.filterLabel += this.shortMonthsLabel[startDate.getMonth()];
+                }
+                if (startDate.getFullYear() !== endDate.getFullYear()) {
+                    this.filterLabel += ' ' + startDate.getFullYear();
+                }
+                this.filterLabel += ' - ' + endDate.getDate() + ' '
+                    + this.shortMonthsLabel[endDate.getMonth()] + ' '
+                    + endDate.getFullYear();
         }
         // informo il padre della change, incapsulo in una setTimeout per essere certo che il padre sia inizializzato
         // lo faccio perchè al momento non ho voglia di implementare i subject
@@ -166,7 +201,8 @@ export class FbDateFilterToolbarComponent implements OnInit {
             this.changed.emit({
                 start: startDate,
                 end: endDate,
-                range: this.currRange 
+                range: this.currRange,
+                offset: this.offset
             });
         }, 1);
 
@@ -179,14 +215,28 @@ export class FbDateFilterToolbarComponent implements OnInit {
         const popover = await this.popoverCtrl.create({
             component: FbDateFilterToolbarPopoverComponent,
             componentProps: {
-                range: this.currRange // passo l'attuale range selezionato per evidenziarlo nel popover
+                range: this.currRange, // passo l'attuale range selezionato per evidenziarlo nel popover
+                offset: this.offset, // passo l'attuale offset utile per riproporre la data corrente nel filtro per giorno
+                startCustDate: this.startCustDate, // passo l'eventuale data inizio del periodo custom
+                endCustDate: this.endCustDate // passo l'eventuale data fine del periodo custom
             }
         });
         popover.present();
         popover.onDidDismiss().then((rtn: any) => {
             if (rtn && rtn.data) {
                 this.currRange = rtn.data.range;
-                this.offset = 0;
+                if (rtn.data.offset) {
+                    this.offset = rtn.data.offset;
+                } else {
+                    this.offset = 0;
+                }
+                if (rtn.data.startDate && rtn.data.endDate) {
+                    this.startCustDate = rtn.data.startDate;
+                    this.endCustDate = rtn.data.endDate;
+                } else {
+                    this.startCustDate = null;
+                    this.endCustDate = null;
+                }
                 this.updateOnLocalStorage();
                 this.updateIconAndLabel();
             }
@@ -197,10 +247,12 @@ export class FbDateFilterToolbarComponent implements OnInit {
      * Metodo che si occupa di salvare l'ultimo filtro impostato nel local storage
      */
     private updateOnLocalStorage() {
-        if(this.saveConfig){
+        if (this.saveConfig) {
             window.localStorage.setItem('fb-date-filter', JSON.stringify({
                 range: this.currRange,
-                offset: this.offset
+                offset: this.offset,
+                startCustDate: this.startCustDate,
+                endCustDate: this.endCustDate
             }));
         }
     }

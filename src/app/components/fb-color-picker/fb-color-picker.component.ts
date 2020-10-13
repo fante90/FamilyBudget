@@ -2,7 +2,7 @@ import { Component, ViewChild, Renderer2 } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
 @Component({
-    selector: 'app-fb-color-picker',
+    selector: 'fb-color-picker',
     templateUrl: './fb-color-picker.component.html',
     styleUrls: ['./fb-color-picker.component.scss'],
 })

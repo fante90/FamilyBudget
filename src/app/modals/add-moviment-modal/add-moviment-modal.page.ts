@@ -5,6 +5,7 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
 import { MovimentTypes } from 'src/app/classes/MovimentsTypes';
 import { Moviment } from 'src/app/classes/Moviment';
 import { UIService } from 'src/app/services/ui.service';
+import { UtilityService } from 'src/app/services/utility.service';
 
 @Component({
   selector: 'app-add-moviment-modal',
@@ -22,7 +23,8 @@ export class AddMovimentModalPage {
     private appDBService: FamilyBudgetDBService,
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private uiService: UIService
+    private uiService: UIService,
+    private utilityService: UtilityService
   ) { }
 
   async ionViewDidEnter() {
@@ -35,7 +37,7 @@ export class AddMovimentModalPage {
       } catch (error) {
         this.uiService.presentAlert({
           header: 'ERRORE',
-          message: 'Categoria non valida o rimossa',
+          message: 'Movimento non valido o rimosso',
           buttons: [
             {
               text: 'Chiudi',
@@ -46,9 +48,10 @@ export class AddMovimentModalPage {
         });
         this.modalCtrl.dismiss();
       }
+      tmpModel.date = this.utilityService.dateToYYYYMMDD(tmpModel.date);
     } else { // new
       tmpModel.type = this.navParams.get('mvType');
-      tmpModel.date = new Date().toISOString();
+      tmpModel.date = this.utilityService.dateToYYYYMMDD(new Date());
       tmpModel.value = 0;
     }
     // Carico le categorie in base al tipo di movimento che si vuole inserire/modificare
