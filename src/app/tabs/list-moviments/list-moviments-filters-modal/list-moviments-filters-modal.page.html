@@ -25,9 +25,9 @@
     </ion-item>
     <ion-item>
       <ion-label position="floating">
-        Categoria movimento
+        Categorie movimento
       </ion-label>
-      <ion-select [(ngModel)]="model.category" name="category">
+      <ion-select [(ngModel)]="model.categories" placeholder="Tutte" multiple name="category">
         <ion-select-option 
           *ngFor="let movCategory of movimentCategories; let i = index" 
           value="{{ movCategory._id }}"

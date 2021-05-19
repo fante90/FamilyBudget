@@ -3,6 +3,13 @@
     <ion-list-header>
       <ion-label class="ion-no-margin">Movimenti</ion-label>
       <ion-icon
+        (click)="showSearchField = !showSearchField"
+        class="ion-float-right ion-padding-start"
+        color="dark"
+        size="large"
+        name="search-outline"
+      ></ion-icon>
+      <ion-icon
         (click)="openModalSetFilter()"
         class="ion-float-right ion-padding-horizontal"
         color="dark"
@@ -11,13 +18,16 @@
       ></ion-icon>
     </ion-list-header>
   </ion-list>
+  <ion-searchbar *ngIf="showSearchField" placeholder="Cerca movimenti..." (ionInput)="searchMoviments($event)"></ion-searchbar>
   <fb-date-filter-toolbar 
     [initConfig]="dateFilterToolbarInitConfig"
     [saveConfig]="dateFilterToolbarSaveConfig"
     (changed)="dateFilterChanged($event)"
   >
   </fb-date-filter-toolbar>
+  
 </div>
+<div class="rounded-top"></div>
 <ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="refreshList($event)">
     <ion-refresher-content></ion-refresher-content>

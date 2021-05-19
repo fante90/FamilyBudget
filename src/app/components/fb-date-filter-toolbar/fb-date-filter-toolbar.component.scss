@@ -3,8 +3,9 @@
   color: var(--ion-color-primary-contrast);
   padding: 14px;
   margin-top: 5px;
-  margin-bottom: 10px;
-
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
+  
   .next,
   .prev {
     font-size: 18px;

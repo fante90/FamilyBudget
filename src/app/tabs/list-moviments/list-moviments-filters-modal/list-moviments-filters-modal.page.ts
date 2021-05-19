@@ -10,7 +10,7 @@ import { FamilyBudgetDBService } from 'src/app/services/familyBudgetDB.service';
   templateUrl: './list-moviments-filters-modal.page.html',
 })
 export class ListMovimentsFiltersModalPage {
-  public model = { fromDate: null, toDate: null, type: null, category: null };
+  public model = { fromDate: null, toDate: null, type: null, categories: null };
   public movimentTypes: Array<any> = [];
   public movimentCategories: Array<any> = [];
   constructor(
@@ -32,7 +32,7 @@ export class ListMovimentsFiltersModalPage {
    * Metodo richiamato al cambiare del tipo di movimento
    */
   public async changeMovType(movType) {
-    this.model.category = '*';
+    this.model.categories = null;
     this.getCategories(movType);
   }
 
@@ -54,7 +54,7 @@ export class ListMovimentsFiltersModalPage {
       };
     }
     this.movimentCategories = await MovimentCategory.getEntries(this.appDBService, false, null, selector);
-    this.movimentCategories.unshift({ _id: '*', description: 'Tutte' });
+    //this.movimentCategories.unshift({ _id: '*', description: 'Tutte' });
     return MovimentCategory.getEntries(this.appDBService, false, null, selector);
   }
 

@@ -13,7 +13,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 export class FbDateFilterToolbarComponent implements OnInit {
 
-    @Input() initConfig; // permette di forzare in inizializzazione range e offset 
+    @Input() initConfig; // permette di forzare in inizializzazione range e offset
     @Input() saveConfig = true; // determina se salvare in localStorage la configurazione scelta
     @Output() changed = new EventEmitter<any>();
     private currRange = '';
@@ -29,6 +29,7 @@ export class FbDateFilterToolbarComponent implements OnInit {
     public filterLabel = '';
     public filterIcon = '';
     private lastOnSwipe = Date.now();
+    private gesture = null;
 
     constructor(private popoverCtrl: PopoverController, private changeDetector: ChangeDetectorRef, private ngZone: NgZone) { }
 
@@ -57,16 +58,6 @@ export class FbDateFilterToolbarComponent implements OnInit {
         }
 
         this.updateIconAndLabel();
-
-        // Traccio lo swipe sul componente così da usarlo per cambiare l'offset dell'intervallo di filtro
-        const gesture = createGesture({
-            el: document.querySelector('.date-toolbar'),
-            threshold: 45, // deve esserci uno swipe di almeno 45px perchè l'handler venga eseguito
-            gestureName: 'swipe',
-            // ngZone serve a dire ad Angular che il metodo viene eseguito nel suo contesto così che venga aggiornata l'interfaccia
-            onMove: ev => this.ngZone.run(() => this.onSwipeHandler(ev)),
-        });
-        gesture.enable();
     }
 
     /**
@@ -206,6 +197,18 @@ export class FbDateFilterToolbarComponent implements OnInit {
             });
         }, 1);
 
+        // Traccio lo swipe sul componente così da usarlo per cambiare l'offset dell'intervallo di filtro
+        if (this.gesture) { // ricreo la gesture ad ogni modifica del filtro altrimenti non funziona
+            this.gesture.destroy();
+        }
+        this.gesture = createGesture({
+            el: document.querySelector('.date-toolbar'),
+            threshold: 45, // deve esserci uno swipe di almeno 45px perchè l'handler venga eseguito
+            gestureName: 'swipe',
+            // ngZone serve a dire ad Angular che il metodo viene eseguito nel suo contesto così che venga aggiornata l'interfaccia
+            onMove: ev => this.ngZone.run(() => this.onSwipeHandler(ev)),
+        });
+        this.gesture.enable();
     }
 
     /**

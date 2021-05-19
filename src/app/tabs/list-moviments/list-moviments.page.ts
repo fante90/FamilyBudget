@@ -17,9 +17,11 @@ export class ListMovimentsPage {
     fromDate: null,
     toDate: null,
     type: '*',
-    category: '*'
+    categories: null
   };
+  public showSearchField = false;
   public moviments: Array<IMoviment> = null;
+  private movimentsBackup: Array<IMoviment> = null;
 
   public dateFilterToolbarInitConfig = null;
   public dateFilterToolbarSaveConfig = true;
@@ -32,7 +34,7 @@ export class ListMovimentsPage {
     // Verifico la presenza di parametri per sovrascrivere l'inizializzazione del modello di filtri
     this.route.params.subscribe(params => {
       if (params.category) { // parametro per sovrascrivere la categoria di filtro
-        this.listFilterModel.category = params.category;
+        this.listFilterModel.categories = [params.category];
       }
       if (params.filterDateType) { // parametro per sovrascrivere il range di date di filtro
         let offset = 0;
@@ -156,7 +158,7 @@ export class ListMovimentsPage {
    * Metodo che inizializza/aggiorna l'elenco dei movimenti
    */
   public refreshList(event = null) {
-    this.moviments = null; // Svuoto l'elenco
+    this.moviments = this.movimentsBackup = null; // Svuoto l'elenco
     // creo il selector in base ai filtri impostati
     const selector = {
       entity: Moviment.entityName,
@@ -169,12 +171,12 @@ export class ListMovimentsPage {
     if (this.listFilterModel.type !== '*') {
       selector['type'] = this.listFilterModel.type;
     }
-    // valuto se selzionata una categoria di movimento
-    if (this.listFilterModel.category !== '*') {
-      selector['id_category'] = this.listFilterModel.category;
+    // valuto se selezionata un elenco di categorie di movimento
+    if (this.listFilterModel.categories && this.listFilterModel.categories.length > 0) {
+      selector['id_category'] = { $in: this.listFilterModel.categories };
     }
     Moviment.getEntries(this.appDBService, false, null, selector).then(result => {
-      this.moviments = result;
+      this.moviments = this.movimentsBackup = result;
       if (event) {
         event.target.complete();
       }
@@ -250,5 +252,24 @@ export class ListMovimentsPage {
     this.listFilterModel.fromDate = filterData.start.toISOString();
     this.listFilterModel.toDate = filterData.end.toISOString();
     this.refreshList();
+  }
+
+  /**
+   * Effettua una ricerca testuale sui movimenti basandosi su note e prezzo
+   */
+  searchMoviments(event) {
+    this.moviments = this.movimentsBackup;
+    const searchTerm = event.srcElement.value;
+
+    if (!searchTerm) {
+      return;
+    }
+
+    this.moviments = this.moviments.filter(mov => {
+        return (
+          mov.note.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ||
+          mov.value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
+        );
+    });
   }
 }
