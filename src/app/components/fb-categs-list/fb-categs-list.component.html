@@ -1,0 +1,30 @@
+<ion-header mode="ios">
+    <ion-toolbar color="light" mode="ios">
+      <div>
+        <ion-title>Categorie</ion-title>
+      </div>
+      <ion-button mode="ios" fill="clear" slot="end" (click)="dismissModal()">
+        <ion-icon color="dark" name="close"></ion-icon>
+      </ion-button>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-searchbar (ionInput)="searchCategories($event)" placeholder="Cerca..."></ion-searchbar>
+    <ion-list lines="full" mode="ios">
+        <ion-item *ngFor="let category of categories">
+            <div
+                slot="start"
+                class="round-icon"
+                [ngStyle]="{'background-color': (category.color) ? category.color : ''}"
+            >
+                <ion-icon *ngIf="category.icon" name="{{ category.icon }}"></ion-icon>
+            </div>
+            <ion-label>
+                <h3>{{ category.description }}</h3>
+                <p>
+                {{ getTypeDescription(category.type) }}
+                </p>
+            </ion-label>
+        </ion-item>
+    </ion-list>
+</ion-content>

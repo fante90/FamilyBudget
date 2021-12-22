@@ -6,6 +6,7 @@ import { Moviment } from 'src/app/classes/Moviment';
 import { ListMovimentsFiltersModalPage } from './list-moviments-filters-modal/list-moviments-filters-modal.page';
 import { UtilityService } from 'src/app/services/utility.service';
 import { ActivatedRoute } from '@angular/router';
+import { MovimentCategory } from 'src/app/classes/MovimentCategory';
 
 @Component({
   selector: 'app-moviments',
@@ -22,6 +23,7 @@ export class ListMovimentsPage {
   public showSearchField = false;
   public moviments: Array<IMoviment> = null;
   private movimentsBackup: Array<IMoviment> = null;
+  private searchTerm: string;
 
   public dateFilterToolbarInitConfig = null;
   public dateFilterToolbarSaveConfig = true;
@@ -145,6 +147,12 @@ export class ListMovimentsPage {
         ]
       });
     } else { // Tutto ok
+      // Faccio un -1 sul numero di movimenti della categoria
+      const movimentCategory = new MovimentCategory(this.appDBService);
+      if (movimentCategory.findEntry(moviment.id_category)) {
+        movimentCategory.numMov -= 1;
+        movimentCategory.save();
+      }
       this.uiService.presentToast({
         message: 'Movimento eliminato correttamente',
         duration: 2000,
@@ -177,6 +185,11 @@ export class ListMovimentsPage {
     }
     Moviment.getEntries(this.appDBService, false, null, selector).then(result => {
       this.moviments = this.movimentsBackup = result;
+      // se avevo una ricerca testuale la applico
+      if (this.searchTerm) {
+        // simulo l'oggetto che arriva dall'evento triggerato scrivendo nel campo di ricerca
+        this.searchMoviments({ srcElement: { value: this.searchTerm } });
+      }
       if (event) {
         event.target.complete();
       }
@@ -259,17 +272,17 @@ export class ListMovimentsPage {
    */
   searchMoviments(event) {
     this.moviments = this.movimentsBackup;
-    const searchTerm = event.srcElement.value;
+    this.searchTerm = event.srcElement.value;
 
-    if (!searchTerm) {
+    if (!this.searchTerm) {
       return;
     }
 
     this.moviments = this.moviments.filter(mov => {
-        return (
-          mov.note.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ||
-          mov.value.toString().toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
-        );
+      return (
+        mov.note.toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1 ||
+        mov.value.toString().toLowerCase().indexOf(this.searchTerm.toLowerCase()) > -1
+      );
     });
   }
 }

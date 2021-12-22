@@ -105,6 +105,12 @@ export class AddMovimentModalPage {
           ]
         });
       } else { // Tutto ok
+        // Faccio un +1 sul numero di movimenti della categoria
+        const movimentCategory = new MovimentCategory(this.appDBService);
+        if (movimentCategory.findEntry(moviment.id_category)) {
+          movimentCategory.numMov += 1;
+          movimentCategory.save();
+        }
         this.uiService.presentToast({
           message: (this.model._id) ? 'Movimento aggiornato correttamente' : 'Movimento inserito correttamente',
           duration: 2000,

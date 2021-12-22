@@ -26,7 +26,7 @@ export class FamilyBudgetDBService {
             if (!this.dbInstance) {
                 this.dbInstance = new PouchDB(this.DB_NAME);
             }
-            resolve();
+            resolve(true);
         });
         return promise;
     }
@@ -48,7 +48,7 @@ export class FamilyBudgetDBService {
                     entry._id = entityName + ':' + id;
                     entry.entity = entityName;
                     this.dbInstance.put(entry).then(() => {
-                        resolve();
+                        resolve(true);
                     }).catch((error) => {
                         reject(error);
                     });
@@ -72,7 +72,7 @@ export class FamilyBudgetDBService {
                 entry = Object.assign(entry, entryUpd);
                 return this.dbInstance.put(entry);
             }).then(() => {
-                resolve();
+                resolve(true);
             }).catch((error) => {
                 reject(error);
             });
@@ -89,7 +89,7 @@ export class FamilyBudgetDBService {
             this.dbInstance.get(entryKey).then((entry) => {
                 return this.dbInstance.remove(entry);
             }).then(() => {
-                resolve();
+                resolve(true);
             }).catch((error) => {
                 reject(error);
             });
@@ -220,7 +220,7 @@ export class FamilyBudgetDBService {
                     this.dbInstance.bulkDocs(
                         docs,
                         { new_edits: false } // non modifica la revisione del documento
-                    ).then(() => resolve())
+                    ).then(() => resolve(true))
                         .catch((error) => reject(error));
                 }).catch((error) => reject(error));
             }).catch((error) => reject(error));

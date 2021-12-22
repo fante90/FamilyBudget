@@ -12,6 +12,8 @@ import { FbHeaderComponent } from './fb-header/fb-header.component';
 import { FbCategCardListComponent } from './fb-categs-card-list/fb-categs-card-list.component';
 import { FbCategCardListItmComponent } from './fb-categs-card-list/fb-categs-card-list-itm/fb-categs-card-list-itm.component';
 import { FbSkeletonItmMovsComponent } from './fb-skeleton-itm-movs/fb-skeleton-itm-movs.component';
+import { FbChooseCatFieldComponent } from './fb-choose-cat-field/fb-choose-cat-field.component';
+import { FbCategsListComponent } from './fb-categs-list/fb-categs-list.component';
 
 
 
@@ -25,7 +27,8 @@ import { FbSkeletonItmMovsComponent } from './fb-skeleton-itm-movs/fb-skeleton-i
         FbDateFilterToolbarComponent,
         FbHeaderComponent,
         FbCategCardListComponent,
-        FbSkeletonItmMovsComponent
+        FbSkeletonItmMovsComponent,
+        FbChooseCatFieldComponent
     ],
     declarations: [
         FbDateFilterToolbarComponent, FbDateFilterToolbarPopoverComponent,
@@ -33,14 +36,17 @@ import { FbSkeletonItmMovsComponent } from './fb-skeleton-itm-movs/fb-skeleton-i
         FbIconPickerComponent,
         FbHeaderComponent,
         FbCategCardListComponent, FbCategCardListItmComponent,
-        FbSkeletonItmMovsComponent
+        FbSkeletonItmMovsComponent,
+        FbChooseCatFieldComponent,
+        FbCategsListComponent
     ],
     entryComponents: [
         FbDateFilterToolbarPopoverComponent,
         FbColorPickerComponent,
         FbIconPickerComponent,
         FbCategCardListComponent,
-        FbCategCardListItmComponent
+        FbCategCardListItmComponent,
+        FbCategsListComponent
     ]
 })
 export class FbComponentsModule { }

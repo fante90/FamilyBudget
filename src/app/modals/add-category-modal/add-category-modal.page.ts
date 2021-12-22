@@ -14,7 +14,7 @@ import { FbIconPickerComponent } from 'src/app/components/fb-icon-picker/fb-icon
 })
 export class AddCategoryModalPage {
 
-  public model: IMovimentCategory = { _id: null, description: '', type: '', color: '', icon: '' };
+  public model: IMovimentCategory = { _id: null, description: '', type: '', color: '', icon: '', numMov: 0 };
   public movimentsTypes: Array<IMovimentType> = [];
   public submitted = false;
 

@@ -7,7 +7,8 @@ export class MovimentCategory extends Entity {
     public type: string;
     public color: string;
     public icon: string;
-    protected fieldProperties = ['_id', 'description', 'type', 'color', 'icon'];
+    public numMov: number;
+    protected fieldProperties = ['_id', 'description', 'type', 'color', 'icon', 'numMov'];
 
     static entityName = 'movimentCategories';
 
@@ -50,7 +51,8 @@ export class MovimentCategory extends Entity {
                 description: this.description,
                 type: this.type,
                 color: this.color,
-                icon: this.icon
+                icon: this.icon,
+                numMov: this.numMov || 0
             };
             if (this._id) { // Modifica
                 await this.appDBService.updateEntry(this._id, entryData);
